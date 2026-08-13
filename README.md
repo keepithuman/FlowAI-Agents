@@ -6,7 +6,7 @@ A vendor-organized marketplace of network and infrastructure automation agents �
 
 ## Why this exists
 
-Most agent examples floating around are either a single hero demo or a wall of undocumented JSON, and most are tied to one specific orchestration platform whether they need to be or not. This repo aims to be neither: the procedure knowledge in each vendor's `SKILL.md` stands on its own regardless of what executes it, and every accompanying `.project.json` reference implementation was actually created on a live Itential Platform instance and `GET`-verified (tool references resolve, provider is set, every mutating agent has its approval gate wired) before being committed — not hand-authored from memory. The documentation format is deliberately built on conventions that already exist elsewhere — `AGENTS.md` and Claude's `SKILL.md` — so a vendor package here is legible to tools that already understand either one, with no adapter layer.
+Most agent examples floating around are either a single hero demo or a wall of undocumented JSON, and most are tied to one specific orchestration platform whether they need to be or not. This repo aims to be neither: the procedure knowledge in each vendor's `SKILL.md` stands on its own regardless of what executes it, and every accompanying `.project.json` is a real, verified reference implementation — not hand-authored from memory. The documentation format is deliberately built on conventions that already exist elsewhere — `AGENTS.md` and Claude's `SKILL.md` — so a vendor package here is legible to tools that already understand either one, with no adapter layer.
 
 ## How it's organized
 
