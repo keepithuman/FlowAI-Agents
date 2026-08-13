@@ -1,6 +1,6 @@
 # Network and Infrastructure Agents — Vendor Package Format Spec
 
-This document defines the format every vendor package in this marketplace must follow. It is vendor-agnostic — nothing below refers to Citrix, NetScaler, or any other specific integration. Vendor content lives in `vendors/<slug>/`; this spec defines the *shape* that content must take.
+This document defines the format every vendor package in this marketplace must follow. Vendor content lives in `vendors/<slug>/`; this spec defines the *shape* that content must take.
 
 The format deliberately reuses two conventions that already have independent industry traction, rather than inventing a third:
 
@@ -53,7 +53,7 @@ description: <one line, specific enough to disambiguate this skill from others i
 ---
 ```
 
-**Core principle: `SKILL.md` teaches the domain procedure, not the Itential wiring.** This marketplace is vendor-neutral by design — "vendor" here means the *product* (Citrix NetScaler, Cisco IOS, ServiceNow), not Itential. Someone should be able to read a `SKILL.md` and correctly implement the same agent behavior on a completely different orchestration platform, with zero Itential-specific knowledge required. The `.project.json` files are the accelerator *if* the reader happens to be on Itential — not the point of the document.
+**Core principle: `SKILL.md` teaches the domain procedure, not the Itential wiring.** "Vendor" in this spec means the product being automated, not Itential. A `SKILL.md` must be implementable on a completely different orchestration platform with zero Itential-specific knowledge required. The `.project.json` files are an accelerator for readers who happen to be on Itential — not the point of the document.
 
 Required body sections, in this order:
 
