@@ -34,8 +34,8 @@ This is the file an agent (human or AI) reads *first*, before touching any tool.
 
 1. **Domain overview** — what real-world problem this vendor's agents solve, in plain language.
 2. **Design principles** — the non-negotiable patterns every agent in this vendor package follows. At minimum, state:
-   - The approval model (does every mutating action require human sign-off before it executes, and via what mechanism?)
-   - The modularity rule actually applied (how tools are grouped into agents, and the reasoning — not just "here are the agents")
+   - The approval mechanism used. Every agent capable of mutating a target system's state must gate on explicit human approval before acting — this spec does not permit an unattended-write agent, regardless of the target system's apparent risk level.
+   - The modularity rule actually applied. No agent's tool list may exceed 10 entries; an agent covering more than one concern must be split into multiple agents or projects.
    - Any vendor-specific footguns that a generic LLM tool-caller would not know about (e.g., a schema-valid API call that has no real backing implementation on some deployments)
 3. **Capability index** — a table mapping "thing a user might ask for" → which project/agent handles it. This is the router. It must be scannable in under a minute.
 4. **Known limitations** — what this vendor's agents deliberately do NOT cover yet, and why (scope boundary, not a bug list).
@@ -75,13 +75,3 @@ Do not publish a project file whose agents have never been created and checked (
 ## Machine-readable index
 
 Every vendor package must have a corresponding block in the root [`registry.json`](../registry.json) — see that file's own header comment for its schema. The registry is what makes this a marketplace instead of a folder tree: it's the thing a catalog UI, search tool, or CLI would actually query. A vendor package without a registry entry is invisible to tooling even if the files are perfect.
-
-## Anti-patterns (things that have gone wrong in practice — don't repeat them)
-
-- **One mega-agent per vendor with 20+ tools.** An LLM tool-caller degrades as its tool list grows — it starts picking plausible-but-wrong tools, or ignoring genuinely relevant ones buried in a long list. Split by sub-capability instead. As a rule of thumb, if an agent's tool count is pushing past ~10, it's covering more than one concern — split it.
-- **Trusting a tool discovery result without checking `active`/duplicate-catalog issues.** Some platform integrations register multiple app-name variants for the same underlying API (an old inactive one alongside a current active one). Tool resolution must filter for the active, correct variant — never take the first result blindly. This is implementation detail for whoever builds the reference implementation, not something to surface in `SKILL.md`.
-- **Skipping the human-approval gate on any mutating action "because the demo is low-risk."** The approval gate is the product, not a demo nicety — every agent that can change a real system's state proposes the exact change and waits for explicit sign-off before acting. This is non-negotiable across all vendors in this marketplace, not a per-vendor style choice.
-- **Publishing a project file that was never created and verified on a real platform.** Hallucinated tool names and made-up payload shapes look identical to real ones until someone tries to import the bundle. Every published project must have been built and `GET`-verified for real.
-- **No machine-readable index.** A marketplace that's only human-browsable markdown isn't discoverable by anything except a human with time to read every folder.
-- **`SKILL.md` written as an Itential tool-mapping document with procedure as an afterthought.** This inverts the actual value: the procedure is the durable, portable knowledge; the tool mapping is a convenience for one specific platform. A reader on a different orchestration platform should get full value from a vendor's `SKILL.md` without ever seeing an Itential-specific string.
-- **A dedicated "Gotchas" section that duplicates what's already stated inline in the procedure.** If a caveat matters, it belongs woven into the step it affects, in the reader's natural path through the document — not in a separate list most people skip past.
