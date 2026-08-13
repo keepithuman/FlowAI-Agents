@@ -53,13 +53,20 @@ description: <one line, specific enough to disambiguate this skill from others i
 ---
 ```
 
-Required body sections:
+**Core principle: `SKILL.md` teaches the domain procedure, not the Itential wiring.** This marketplace is vendor-neutral by design — "vendor" here means the *product* (Citrix NetScaler, Cisco IOS, ServiceNow), not Itential. Someone should be able to read a `SKILL.md` and correctly implement the same agent behavior on a completely different orchestration platform, with zero Itential-specific knowledge required. The `.project.json` files are the accelerator *if* the reader happens to be on Itential — not the point of the document.
+
+Required body sections, in this order:
 
 1. **When to use this skill** — the trigger conditions (what a request looks like when it belongs here).
-2. **Agent-to-tool map** — for every agent in every project under this vendor: its exact tool list (by real, callable method name — not paraphrased), and which project file it lives in.
-3. **Patterns** — the concrete, reusable request/response shapes an agent-builder needs (payload wrapper conventions, ID formats, binding/dependency ordering between create calls).
-4. **Gotchas** — real, previously-hit failure modes and their fixes, each with: what broke, why, and the fix. Not hypothetical — only include gotchas that were actually discovered building or running an agent in this package.
-5. **Verification checklist** — what to check after building or modifying an agent in this package before considering it done (tool resolution correctness, provider resolution, whatever is specific to this vendor's platform quirks).
+2. **Operational procedures** — the actual, real-world procedure for each capability area, written the way a domain expert would write a runbook: what order things must happen in, what to check before acting, what decision points exist, and why. Reference the *product's own* API/CLI concepts by their real names (e.g., a NITRO resource name, a CLI verb) — that's product knowledge, not platform wiring. Do **not** reference Itential tool names, `referenceId` strings, agent names, or project files in this section. If you can't describe a step without naming an Itential tool, you're describing the implementation, not the procedure — push it to section 4 instead.
+3. **Patterns** — reusable, product-level conventions that hold regardless of what executes them (e.g., a vendor API's dependency ordering between object types, a naming convention, a resource that's schema-valid but non-functional in practice).
+4. **Itential reference implementation** *(clearly separated, clearly optional)* — for each procedure in section 2, which project/agent in `projects/` already implements it, and its exact tool list (real, callable method names — not paraphrased). Framed explicitly as: "if you're building this on Itential, here's what's already done for you" — not as the primary content.
+5. **Gotchas** — split into two clearly labeled groups:
+   - **Product-level** (vendor-neutral — true regardless of orchestration platform, e.g. an API resource that's schema-valid but has no real backing command)
+   - **Itential-implementation-level** (specific to how this was wired up on Itential's Agent Project Service / Tools Service — e.g. a tool-catalog resolution quirk)
+6. **Verification checklist** — what to check before considering a procedure correctly implemented. Split the same way as gotchas: product-level checks (did the real-world state actually change as intended) vs. Itential-implementation checks (did the tool reference resolve, is provider populated) if the reader is using the reference implementation.
+
+A `SKILL.md` that's 90% Itential tool-mapping tables and 10% procedure has the ratio backwards — fix it before it ships.
 
 ## `projects/*.project.json` — required shape
 
@@ -81,3 +88,4 @@ Every vendor package must have a corresponding block in the root [`registry.json
 - **Skipping the human-approval gate on any mutating action "because the demo is low-risk."** The approval gate is the product, not a demo nicety — every agent that can change a real system's state proposes the exact change and waits for explicit sign-off before acting. This is non-negotiable across all vendors in this marketplace, not a per-vendor style choice.
 - **Publishing a project file that was never created and verified on a real platform.** Hallucinated tool names and made-up payload shapes look identical to real ones until someone tries to import the bundle. Every published project must have been built and `GET`-verified for real.
 - **No machine-readable index.** A marketplace that's only human-browsable markdown isn't discoverable by anything except a human with time to read every folder.
+- **`SKILL.md` written as an Itential tool-mapping document with procedure as an afterthought.** This inverts the actual value: the procedure is the durable, portable knowledge; the tool mapping is a convenience for one specific platform. A reader on a different orchestration platform should get full value from a vendor's `SKILL.md` without ever seeing an Itential-specific string.

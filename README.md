@@ -1,5 +1,7 @@
 # FlowAI Agents
 
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
+
 A vendor-organized marketplace of [Itential FlowAI](https://www.itential.com/) agent definitions — real, exported, verified project bundles you can import directly, plus the documentation that lets you (or an AI agent) understand, extend, or rebuild them.
 
 ## Why this exists
@@ -40,10 +42,10 @@ The exact contract every vendor package must satisfy is defined in [`docs/AGENT-
 - **Small, single-purpose agents over mega-agents.** An agent with 20+ tools degrades as an LLM tool-caller — it starts missing relevant tools or picking plausible-but-wrong ones. Every agent in this marketplace tops out around 10 tools; broader domains become multiple agents in one project, not one large agent.
 - **Nothing published that wasn't actually built and verified.** Every `.project.json` here is a real export from a platform where the project was created and its agents `GET`-verified — not a hand-authored guess at what a bundle should look like.
 
-## Contributing a new vendor
+## Contributing
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) to get started. Before contributing, you'll need to sign our [Contributor License Agreement](CLA.md). This project follows a [Code of Conduct](CODE_OF_CONDUCT.md); see [SECURITY.md](SECURITY.md) for reporting a security issue.
 
 ## License
 
-[MIT](./LICENSE)
+This project is licensed under the GNU General Public License v3.0 — see the [LICENSE](LICENSE) file for details.
