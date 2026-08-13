@@ -15,9 +15,9 @@ Neither format is a marketplace invention — that's the point. A vendor package
 vendors/<vendor-slug>/
 ├── README.md          — human-facing vendor index (what's here, at a glance)
 ├── AGENTS.md           — orientation: how to work in this vendor's domain
-├── SKILL.md             — on-demand reference: exact tools, patterns, gotchas
+├── SKILL.md             — the real operational procedure, vendor-neutral
 └── projects/
-    └── <project-slug>.project.json   — real, exported FlowAI project bundles
+    └── <project-slug>.project.json   — real, exported FlowAI project bundles (Itential accelerator)
 ```
 
 `<vendor-slug>` is lowercase-kebab-case (`citrix`, `cisco-ios`, `service-now`). One folder per vendor, not per product line, unless a vendor's product lines are unrelated enough to need separate agent design patterns (judgment call — document the reasoning in that vendor's README.md if you split).
@@ -58,15 +58,10 @@ description: <one line, specific enough to disambiguate this skill from others i
 Required body sections, in this order:
 
 1. **When to use this skill** — the trigger conditions (what a request looks like when it belongs here).
-2. **Operational procedures** — the actual, real-world procedure for each capability area, written the way a domain expert would write a runbook: what order things must happen in, what to check before acting, what decision points exist, and why. Reference the *product's own* API/CLI concepts by their real names (e.g., a NITRO resource name, a CLI verb) — that's product knowledge, not platform wiring. Do **not** reference Itential tool names, `referenceId` strings, agent names, or project files in this section. If you can't describe a step without naming an Itential tool, you're describing the implementation, not the procedure — push it to section 4 instead.
-3. **Patterns** — reusable, product-level conventions that hold regardless of what executes them (e.g., a vendor API's dependency ordering between object types, a naming convention, a resource that's schema-valid but non-functional in practice).
-4. **Itential reference implementation** *(clearly separated, clearly optional)* — for each procedure in section 2, which project/agent in `projects/` already implements it, and its exact tool list (real, callable method names — not paraphrased). Framed explicitly as: "if you're building this on Itential, here's what's already done for you" — not as the primary content.
-5. **Gotchas** — split into two clearly labeled groups:
-   - **Product-level** (vendor-neutral — true regardless of orchestration platform, e.g. an API resource that's schema-valid but has no real backing command)
-   - **Itential-implementation-level** (specific to how this was wired up on Itential's Agent Project Service / Tools Service — e.g. a tool-catalog resolution quirk)
-6. **Verification checklist** — what to check before considering a procedure correctly implemented. Split the same way as gotchas: product-level checks (did the real-world state actually change as intended) vs. Itential-implementation checks (did the tool reference resolve, is provider populated) if the reader is using the reference implementation.
-
-A `SKILL.md` that's 90% Itential tool-mapping tables and 10% procedure has the ratio backwards — fix it before it ships.
+2. **Operational procedures** — the actual, real-world procedure for each capability area, written the way a domain expert would write a runbook: what order things must happen in, what to check before acting, what decision points exist, and why. Reference the *product's own* API/CLI concepts by their real names (e.g., a NITRO resource name, a CLI verb) — that's product knowledge, not platform wiring. Weave in load-bearing caveats (a resource that's schema-valid but non-functional in practice, an ordering constraint that isn't obvious) directly into the relevant step, in plain language — don't quarantine them in a separate "gotchas" list that most readers will skip. Do **not** reference Itential tool names, `referenceId` strings, agent names, or project files in this section.
+3. **Patterns** — reusable, product-level conventions that hold regardless of what executes them.
+4. **Reference implementation** *(one short paragraph, not a table)* — a pointer to `projects/` and that vendor's `README.md`/`registry.json` entry, framed as "already built and verified on Itential if you want the accelerator." Do not enumerate tool names, `referenceId` strings, or agent-by-agent tool lists here — that level of detail belongs in the project files themselves, which are already the source of truth for it. If a reader needs the exact tool list for a specific agent, the project file is one click away; restating it in `SKILL.md` just gives it two places to go stale.
+5. **Verification checklist** — what to check before considering a procedure correctly implemented, at the level of "did the real-world state actually change as intended" — not Itential-implementation minutiae (tool resolution, provider fields). That level of detail, if worth keeping at all, belongs with whoever maintains the reference implementation, not in the portable procedure doc.
 
 ## `projects/*.project.json` — required shape
 
@@ -84,8 +79,9 @@ Every vendor package must have a corresponding block in the root [`registry.json
 ## Anti-patterns (things that have gone wrong in practice — don't repeat them)
 
 - **One mega-agent per vendor with 20+ tools.** An LLM tool-caller degrades as its tool list grows — it starts picking plausible-but-wrong tools, or ignoring genuinely relevant ones buried in a long list. Split by sub-capability instead. As a rule of thumb, if an agent's tool count is pushing past ~10, it's covering more than one concern — split it.
-- **Trusting a tool discovery result without checking `active`/duplicate-catalog issues.** Some platform integrations register multiple app-name variants for the same underlying API (an old inactive one alongside a current active one). Tool resolution must filter for the active, correct variant — never take the first result blindly. Document this per-vendor in that vendor's `SKILL.md` if it applies.
+- **Trusting a tool discovery result without checking `active`/duplicate-catalog issues.** Some platform integrations register multiple app-name variants for the same underlying API (an old inactive one alongside a current active one). Tool resolution must filter for the active, correct variant — never take the first result blindly. This is implementation detail for whoever builds the reference implementation, not something to surface in `SKILL.md`.
 - **Skipping the human-approval gate on any mutating action "because the demo is low-risk."** The approval gate is the product, not a demo nicety — every agent that can change a real system's state proposes the exact change and waits for explicit sign-off before acting. This is non-negotiable across all vendors in this marketplace, not a per-vendor style choice.
 - **Publishing a project file that was never created and verified on a real platform.** Hallucinated tool names and made-up payload shapes look identical to real ones until someone tries to import the bundle. Every published project must have been built and `GET`-verified for real.
 - **No machine-readable index.** A marketplace that's only human-browsable markdown isn't discoverable by anything except a human with time to read every folder.
 - **`SKILL.md` written as an Itential tool-mapping document with procedure as an afterthought.** This inverts the actual value: the procedure is the durable, portable knowledge; the tool mapping is a convenience for one specific platform. A reader on a different orchestration platform should get full value from a vendor's `SKILL.md` without ever seeing an Itential-specific string.
+- **A dedicated "Gotchas" section that duplicates what's already stated inline in the procedure.** If a caveat matters, it belongs woven into the step it affects, in the reader's natural path through the document — not in a separate list most people skip past.

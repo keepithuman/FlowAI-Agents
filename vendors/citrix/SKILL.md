@@ -5,7 +5,7 @@ description: Operational procedures for Citrix NetScaler (ADC) - load balancing,
 
 # Citrix NetScaler — Operational Skill Reference
 
-This document teaches the real NetScaler procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It does not assume Itential. Section 4 (Itential Reference Implementation) is a bonus for readers who happen to be on that platform — everything before it stands on its own.
+This document teaches the real NetScaler procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It does not assume Itential — a ready-to-import reference implementation exists if you want it (see the end of this document), but everything above that is self-contained.
 
 ## When to use this skill
 
@@ -30,9 +30,7 @@ Setting up a load-balanced application:
 
 **Content switching** (route by URL/host to different backends): create the CS vserver first — it's the entry point everything else attaches to. Then create CS actions (each names a target LB vserver or content group) and CS policies (the match expression), then bind policies to the CS vserver with an explicit priority. Lower priority numbers evaluate first; get this ordering wrong and a broad catch-all rule can silently shadow a more specific one that never fires.
 
-**Responder policies** (redirect, block, custom response): decide the bind point deliberately — global, a specific CS vserver, or a specific LB vserver — because the *practical effect* of the same policy changes entirely depending on where it's bound. A globally-bound responder policy affects all traffic through the appliance, not just one application. Build the action (what to actually do) before the policy (the match expression), and the policy before any binding.
-
-*Product-level gotcha:* NetScaler's NITRO API auto-generates binding resources in both directions for many relationships (e.g., both "responder policy → LB vserver" and "LB vserver → responder policy" exist as schema-valid, POST-able resources). In practice, only the vserver-owned direction has a real backing CLI command on the appliance — the policy-owned direction can pass request validation and still fail at runtime with a "no such command" class of error. Before wiring a new binding type into any automation, confirm which direction the appliance actually executes by testing a minimal real bind and checking the result — don't assume from the resource name or schema validity alone.
+**Responder policies** (redirect, block, custom response): decide the bind point deliberately — global, a specific CS vserver, or a specific LB vserver — because the *practical effect* of the same policy changes entirely depending on where it's bound. A globally-bound responder policy affects all traffic through the appliance, not just one application. Build the action (what to actually do) before the policy (the match expression), and the policy before any binding. When binding a responder policy to an LB vserver specifically, bind from the vserver's side (the vserver-owned resource) — the API also exposes the same relationship from the policy's side, but only the vserver-owned direction has a real command behind it on the appliance; the other passes validation and fails at runtime. Confirm which direction actually works with a minimal test bind before relying on it in automation.
 
 **Rewrite policies** (modify request/response headers or content): same action-then-policy-then-bind sequence. Rewrite changes are traffic-visible immediately and apply in-line to real requests — always validate against a non-production vserver first; a bad rewrite expression doesn't fail loudly, it just serves subtly wrong content.
 
@@ -125,73 +123,15 @@ Create the profile (the actual detection technique — signature, fingerprint, r
 - **Disable/re-enable beats delete/recreate for anything you might need to reverse under time pressure** (GSLB failover, maintenance windows, temporarily pulling a bad backend). Deletion is for permanent decommissioning, not for reversible operational actions.
 - **Stage-then-attach, not attach-then-configure**, for anything involving external files or connections (SSL certs, LDAP/RADIUS servers, AppFlow collectors, StoreFront/broker addresses for ICA). Confirm the external dependency is reachable/valid on its own before wiring it into a live-traffic-serving object.
 
-## 4. Itential reference implementation
+## Reference implementation
 
-If you're building on the Itential Platform, the procedures above are already implemented, built, and `GET`-verified — 13 projects, 33 agents, real exports in `projects/`. This section maps procedure → what's already done for you. Every write-capable agent listed here implements the propose-exact-change → human-approval → act-only-on-approval pattern via the `view:WorkFlowEngine:ViewData` tool; none of it executes unattended.
-
-| Procedure area | Project file | Agent(s) | Tools (method names, `NetScaler:` prefix implied) |
-|---|---|---|---|
-| Load balancing | `load-balancing.project.json` | LB VServer Agent | `getLbvserverByName`, `listLbvserver`, `createLbvserver`, `updateLbvserver` |
-| | | LB Service & Service Group Agent | `listService`, `createService`, `updateService`, `listServicegroup`, `createServicegroup`, `updateServicegroup` |
-| | | LB Binding & Health Monitor Agent | `createLbvserverServiceBinding`, `createLbvserverServicegroupBinding`, `createLbmonitor`, `updateLbmonitor`, `listLbmonitor`, `createServiceLbmonitorBinding` |
-| Content switching | `traffic-routing.project.json` | CS VServer & Policy Agent | `listCsvserver`, `createCsvserver`, `updateCsvserver`, `createCsaction`, `updateCsaction`, `createCspolicy`, `updateCspolicy`, `listCspolicy` |
-| | | CS Binding Agent | `createCsvserverCspolicyBinding`, `listCsvserverCspolicyBinding`, `createCsvserverLbvserverBinding`, `listCsvserverLbvserverBinding` |
-| Responder policies | `traffic-routing.project.json` | Responder Policy Agent | `createResponderaction`, `updateResponderaction`, `createResponderpolicy`, `updateResponderpolicy`, `listResponderpolicy`, `createResponderpolicyCsvserverBinding`, `createLbvserverResponderpolicyBinding` (the working direction — see the product-level gotcha above), `listLbvserverResponderpolicyBinding` |
-| Rewrite policies | `traffic-routing.project.json` | Rewrite Policy Agent | `createRewriteaction`, `updateRewriteaction`, `createRewritepolicy`, `updateRewritepolicy`, `listRewritepolicy` |
-| Policy building blocks (pattern sets/datasets/string maps) | `traffic-routing.project.json` | Policy Building Blocks Agent | `listPolicydataset`, `createPolicydataset`, `createPolicydatasetValueBinding`, `listPolicypatset`, `createPolicypatset`, `createPolicypatsetPatternBinding`, `listPolicystringmap`, `createPolicystringmap`, `createPolicystringmapPatternBinding` |
-| SSL certificates | `ssl-certificates.project.json` | SSL Certificate Agent | `listSslcertkey`, `getSslcertkeyByName`, `createSslcertkey`, `updateSslcertkey`, `createSslvserverSslcertkeyBinding`, `listSslvserverSslcertkeyBinding` |
-| GSLB / multi-site | `gslb-multi-site.project.json` | GSLB VServer & Service Agent | `listGslbvserver`, `createGslbvserver`, `updateGslbvserver`, `listGslbservice`, `createGslbservice`, `updateGslbservice` |
-| | | GSLB Site & Domain Binding Agent | `createGslbsite`, `listGslbsite`, `createGslbvserverServiceBinding`, `listGslbvserverServiceBinding`, `createGslbvserverDomainBinding`, `listGslbvserverDomainBinding` |
-| WAF | `security-access.project.json` | WAF Policy Agent | `listAppfwprofile`, `createAppfwprofile`, `updateAppfwprofile`, `listAppfwpolicy`, `createAppfwpolicy`, `updateAppfwpolicy`, `createLbvserverAppfwpolicyBinding`, `createCsvserverAppfwpolicyBinding` |
-| Authentication | `security-access.project.json` | Authentication Policy Agent | `listAuthenticationldappolicy`, `createAuthenticationldappolicy`, `listAuthenticationradiuspolicy`, `createAuthenticationradiuspolicy`, `listAuthenticationvserver`, `createAuthenticationvserver`, `createAuthenticationvserverAuthenticationldappolicyBinding`, `createAuthenticationvserverAuthenticationradiuspolicyBinding` |
-| Rate limiting | `security-access.project.json` | Rate Limiting Agent | `listNslimitidentifier`, `createNslimitidentifier`, `listNslimitselector`, `createNslimitselector` |
-| Monitoring & diagnostics | `monitoring-diagnostics.project.json` | Vserver & Service Health Agent (read-only) | `getNsversionByName`, `getHanodeByName`, `listHanode`, `listLbvserver`, `getLbvserverByName`, `listService`, `listServicegroup` |
-| | | Config & Certificate Diagnostics Agent (read-only) | `listCsvserver`, `listResponderpolicy`, `listRewritepolicy`, `listGslbvserver`, `listSslcertkey`, `getSslcertkeyByName` |
-| SSL VPN Gateway | `gateway-remote-access.project.json` | SSL VPN Gateway Agent | `listVpnvserver`, `createVpnvserver`, `updateVpnvserver`, `createVpnglobalAuthenticationldappolicyBinding`, `createVpnglobalAuthenticationradiuspolicyBinding`, `createVpnglobalIntranetapplicationBinding` |
-| ICA proxy | `gateway-remote-access.project.json` | ICA Proxy Agent | `listIcapolicy`, `createIcapolicy`, `updateIcapolicy`, `createIcaaction`, `updateIcaaction`, `createIcapolicyVpnvserverBinding`, `listIcapolicyVpnvserverBinding` |
-| RBAC | `system-administration.project.json` | RBAC Agent | `listSystemuser`, `createSystemuser`, `updateSystemuser`, `listSystemgroup`, `createSystemgroup`, `createSystemuserSystemgroupBinding`, `listSystemcmdpolicy`, `createSystemcmdpolicy`, `createSystemuserSystemcmdpolicyBinding` |
-| Feature & licensing | `system-administration.project.json` | Feature & Licensing Agent | `listNsfeature`, `updateNsfeature`, `listNsmode`, `updateNsmode`, `listNslicense`, `createNslicense` |
-| Config backup | `system-administration.project.json` | Config Backup Agent | `listSystembackup`, `createSystembackup`, `getSystembackupByName` |
-| IP & VLAN | `networking-fundamentals.project.json` | IP & VLAN Agent | `listNsip`, `createNsip`, `updateNsip`, `listVlan`, `createVlan`, `updateVlan`, `createVlanInterfaceBinding`, `createVlanNsipBinding` |
-| Routing & interfaces | `networking-fundamentals.project.json` | Routing & Interfaces Agent | `listRoute`, `createRoute`, `updateRoute`, `deleteRoute`, `listInterface`, `updateInterface`, `createInterfacepair` |
-| LACP channels | `networking-fundamentals.project.json` | Channel (LACP) Agent | `createChannel`, `updateChannel`, `createChannelInterfaceBinding` |
-| NAT | `networking-fundamentals.project.json` | NAT Agent | `listInat`, `createInat`, `updateInat`, `listRnat`, `createRnat`, `updateRnat` |
-| Clustering | `clustering-ha.project.json` | Clustering Agent | `listCluster`, `createCluster`, `listClusterinstance`, `createClusterinstance`, `listClusternode`, `createClusternode`, `createClusterinstanceClusternodeBinding` |
-| HA pairing | `clustering-ha.project.json` | HA Pair Agent | `listHanode`, `createHanode`, `updateHanode` |
-| DNS forward records | `dns-services.project.json` | Forward Record Agent (A/CNAME) | `listDnsaddrec`, `createDnsaddrec`, `updateDnsaddrec`, `listDnscnamerec`, `createDnscnamerec`, `updateDnscnamerec` |
-| DNS zone/reverse records | `dns-services.project.json` | Zone & Reverse Record Agent (NS/PTR/SOA) | `listDnsnsrec`, `createDnsnsrec`, `listDnsptrrec`, `createDnsptrrec`, `listDnssoarec`, `createDnssoarec` |
-| Bot management | `bot-management.project.json` | Bot Management Agent | `listBotpolicy`, `createBotpolicy`, `updateBotpolicy`, `listBotprofile`, `createBotprofile`, `updateBotprofile`, `createBotpolicyCsvserverBinding`, `createBotpolicyLbvserverBinding` |
-| Caching & compression | `traffic-optimization-analytics.project.json` | Caching & Compression Agent | `listCachepolicy`, `createCachepolicy`, `updateCachepolicy`, `createCachecontentgroup`, `createCachepolicyLbvserverBinding`, `listCmppolicy`, `createCmppolicy`, `updateCmppolicy`, `createCmppolicyLbvserverBinding` |
-| Performance profiles & spillover | `traffic-optimization-analytics.project.json` | Performance Profiles & Spillover Agent | `listNstcpprofile`, `createNstcpprofile`, `updateNstcpprofile`, `listNshttpprofile`, `createNshttpprofile`, `updateNshttpprofile`, `listSpilloverpolicy`, `createSpilloverpolicy`, `createSpilloverpolicyLbvserverBinding` |
-| AppFlow analytics | `traffic-optimization-analytics.project.json` | AppFlow Analytics Agent | `listAppflowpolicy`, `createAppflowpolicy`, `updateAppflowpolicy`, `createAppflowaction`, `updateAppflowaction`, `createAppflowcollector`, `createAppflowpolicyCsvserverBinding` |
-
-Every mutating agent above also has `view:WorkFlowEngine:ViewData` in its tool list (omitted from the table for brevity) — the two read-only Monitoring & Diagnostics agents do not.
-
-## Gotchas
-
-**Product-level (vendor-neutral — true on any NetScaler, regardless of what orchestrates it):**
-
-- The responder-to-LB-vserver binding direction issue described in the traffic-routing procedure above: only `lbvserver_responderpolicy_binding` (vserver-owned) has a real backing command; `responderpolicy_lbvserver_binding` (policy-owned) is schema-valid and fails at runtime. Confirmed against the real Citrix NetScaler NITRO 14.1 OpenAPI spec, not just inferred from the runtime error.
-
-**Itential-implementation-level (specific to how this was wired up on Itential's Agent Project Service / Tools Service — not a NetScaler behavior):**
-
-- **Two app-name variants for the same integration — one dead, one live.** This platform's NetScaler adapter registered a stale `Nitro` catalog (`active: false`, ~150 methods, pre-refresh) alongside the current `NetScaler` catalog (`active: true`, ~6,600 methods). `GET /tools?name=<method>` can return both, and list order is not active-first — a naive first-result pick can silently wire the dead variant onto an agent. The failure is silent at create time: the tool entry lands as `unauthorizedReferenceId` instead of `referenceId`, and never resolves at run time. *Fix:* filter for `referenceId` containing `:NetScaler:` (not `:Nitro:`) and `active == true`; after creating/updating any agent, `GET` it back and confirm zero `unauthorizedReferenceId` entries.
-- **Bundle-import `providerResolutions` (keyed by profile name) did not reliably resolve `provider`.** Agents came back with `provider: null` after `POST /agent-project-service/project-bundles/import` even with a correctly-named `providerResolutions` entry. *Fix:* create agents individually via `POST /agent-project-service/projects/{projId}/agents` with `provider: {profile: <uuid>, model: <uuid>}` passed directly, which resolves reliably; if using bundle import anyway, `GET` every agent afterward and `PATCH` in the direct UUIDs for any that came back null.
+The procedures above are already built and running as real, verified Itential FlowAI projects — 13 projects, 33 agents — in [`projects/`](./projects/). If you're on Itential, that's a ready-to-import accelerator; if you're not, the procedures above are everything you need. See [`README.md`](./README.md) for the project index and [`registry.json`](../../registry.json) for the full machine-readable listing.
 
 ## Verification checklist
 
-**Product-level (confirm the real-world state actually changed — on any platform):**
+Confirm the real-world state actually changed — regardless of what platform executed the change:
 
 - [ ] After any create/bind, re-read the object's own state via a `list`/`get` call — don't trust the create call's HTTP success alone
 - [ ] For anything bound to a vserver, confirm the vserver's *aggregate* state as well as the individual bound object's state
 - [ ] For SSL cert changes, confirm the live TLS handshake presents the expected certificate, not just what the config object claims
 - [ ] For anything with an "enable blocking/mode" step (WAF, bot management), confirm it ran in observe/log-only mode against real traffic first
-
-**Itential-implementation-level (if using the reference implementation in section 4):**
-
-- [ ] Every `tools[]` entry on the agent has a `referenceId` field, never `unauthorizedReferenceId`
-- [ ] Every NetScaler `referenceId` contains `:NetScaler:`, never `:Nitro:`
-- [ ] `provider` is a populated object with both `profile` and `model` UUIDs — never `null`
-- [ ] Agent tool count is ≤ 10 — if not, it's covering more than one procedure and should be split
-- [ ] If the agent can mutate state, `view:WorkFlowEngine:ViewData` is present and its `instructions` describe propose → approve → act explicitly
-- [ ] No `POST /agent-session-manager/sessions` or `run-agent` call was made unless a live test run was actually intended
