@@ -1,4 +1,4 @@
-# FlowAI Agents — Vendor Package Format Spec
+# Network and Infrastructure Agents — Vendor Package Format Spec
 
 This document defines the format every vendor package in this marketplace must follow. It is vendor-agnostic — nothing below refers to Citrix, NetScaler, or any other specific integration. Vendor content lives in `vendors/<slug>/`; this spec defines the *shape* that content must take.
 

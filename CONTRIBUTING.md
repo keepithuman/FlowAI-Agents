@@ -1,6 +1,6 @@
-# Contributing to FlowAI Agents
+# Contributing to Network and Infrastructure Agents
 
-Thank you for your interest in contributing to FlowAI Agents! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every vendor package must clear.
+Thank you for your interest in contributing to Network and Infrastructure Agents! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every vendor package must clear.
 
 ## Table of Contents
 
@@ -26,7 +26,7 @@ By participating in this project, you are expected to uphold the [Code of Conduc
 
 - A **new vendor package** (`vendors/<slug>/`) — see the checklist below.
 - A **new project or agent** added to an existing vendor package.
-- A **documented gotcha** added to an existing vendor's `SKILL.md` — these are valuable even without new agents attached.
+- A **refinement to an existing vendor's operational procedure** in `SKILL.md` — a missing step, a caveat woven into the wrong place, a clearer explanation of a decision point — these are valuable even without new agents attached.
 - Improvements to [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) itself, if you find the format spec is missing something a real vendor package needed.
 
 ## Vendor Package Submission Checklist
@@ -40,7 +40,7 @@ Full detail lives in [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) 
 - [ ] Every mutating agent proposes the exact change and gates on human approval (`view:WorkFlowEngine:ViewData` or an equivalent) before acting. No exceptions for "it's just a demo."
 - [ ] No offensive, destructive, or evasive capability anywhere in the package.
 - [ ] `registry.json` updated with your vendor's entry, matching the actual contents of `projects/`.
-- [ ] Gotchas documented in `SKILL.md` are real — something that actually broke while building, with what broke, why, and the fix.
+- [ ] Caveats in `SKILL.md`'s operational procedures are real and woven into the relevant step — not quarantined in a separate list, and not hypothetical.
 
 ## Getting Started
 
@@ -145,4 +145,4 @@ Include: a clear description, which vendor package/file is affected, expected vs
 
 Contributors who have PRs merged will be listed in the project's contributors and credited in the relevant vendor package's README where appropriate.
 
-Thank you for contributing to FlowAI Agents!
+Thank you for contributing to Network and Infrastructure Agents!

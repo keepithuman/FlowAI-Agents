@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This Code of Conduct sets expectations for behavior in the FlowAI Agents community. It ensures a respectful, safe, and inclusive environment for contributors, maintainers, users, and newcomers — regardless of background, skill level, or personal identity.
+This Code of Conduct sets expectations for behavior in the Network and Infrastructure Agents community. It ensures a respectful, safe, and inclusive environment for contributors, maintainers, users, and newcomers — regardless of background, skill level, or personal identity.
 
 Open source thrives when everyone can contribute without harassment, discrimination, or toxicity. If you're here to collaborate, you're expected to follow this.
 

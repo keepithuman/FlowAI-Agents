@@ -1,12 +1,12 @@
-# FlowAI Agents
+# Network and Infrastructure Agents
 
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-A vendor-organized marketplace of [Itential FlowAI](https://www.itential.com/) agent definitions — real, exported, verified project bundles you can import directly, plus the documentation that lets you (or an AI agent) understand, extend, or rebuild them.
+A vendor-organized marketplace of network and infrastructure automation agents — organized by the real operational procedure for each domain (vendor-neutral, no platform assumed), with a ready-to-import [Itential FlowAI](https://www.itential.com/) reference implementation for every procedure so you can accelerate the build if you happen to be on that platform.
 
 ## Why this exists
 
-Most agent examples floating around are either a single hero demo or a wall of undocumented JSON. This repo aims to be neither: every project file here was actually created on a live Itential Platform instance and `GET`-verified (tool references resolve, provider is set, every mutating agent has its approval gate wired) before being committed. The documentation format is deliberately built on conventions that already exist elsewhere — `AGENTS.md` and Claude's `SKILL.md` — so a vendor package here is legible to tools that already understand either one, with no adapter layer.
+Most agent examples floating around are either a single hero demo or a wall of undocumented JSON, and most are tied to one specific orchestration platform whether they need to be or not. This repo aims to be neither: the procedure knowledge in each vendor's `SKILL.md` stands on its own regardless of what executes it, and every accompanying `.project.json` reference implementation was actually created on a live Itential Platform instance and `GET`-verified (tool references resolve, provider is set, every mutating agent has its approval gate wired) before being committed — not hand-authored from memory. The documentation format is deliberately built on conventions that already exist elsewhere — `AGENTS.md` and Claude's `SKILL.md` — so a vendor package here is legible to tools that already understand either one, with no adapter layer.
 
 ## How it's organized
 
@@ -14,9 +14,9 @@ Most agent examples floating around are either a single hero demo or a wall of u
 vendors/<vendor-slug>/
 ├── README.md      — what's here, at a glance
 ├── AGENTS.md       — orientation: domain overview, design principles, capability index
-├── SKILL.md          — on-demand reference: exact tools, payload patterns, gotchas
+├── SKILL.md          — the real operational procedure, vendor-neutral
 └── projects/
-    └── *.project.json   — real, exported FlowAI project bundles, ready to import
+    └── *.project.json   — real, exported FlowAI project bundles (Itential accelerator, optional)
 ```
 
 The exact contract every vendor package must satisfy is defined in [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) — read that before adding a new vendor or judging whether an existing one is "done."

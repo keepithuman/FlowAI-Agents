@@ -1,6 +1,6 @@
 {
   "$schemaVersion": 1,
-  "description": "Machine-readable index of every vendor, project, and agent in the FlowAI Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the schema this must conform to when adding a vendor.",
+  "description": "Machine-readable index of every vendor, project, and agent in the Network and Infrastructure Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the schema this must conform to when adding a vendor.",
   "vendors": [
     {
       "slug": "citrix",

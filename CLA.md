@@ -1,10 +1,10 @@
 # Contributor License Agreement
 
-Thank you for your interest in contributing to the FlowAI Agents project (the "Project").
+Thank you for your interest in contributing to the Network and Infrastructure Agents project (the "Project").
 
 ## Individual Contributor License Agreement
 
-By signing this Contributor License Agreement ("CLA"), you accept and agree to the following terms and conditions for your present and future contributions submitted to the maintainers of the FlowAI Agents project ("the Maintainers"). Except for the license granted herein to the Maintainers and recipients of software distributed as part of the Project, you reserve all right, title, and interest in and to your contributions.
+By signing this Contributor License Agreement ("CLA"), you accept and agree to the following terms and conditions for your present and future contributions submitted to the maintainers of the Network and Infrastructure Agents project ("the Maintainers"). Except for the license granted herein to the Maintainers and recipients of software distributed as part of the Project, you reserve all right, title, and interest in and to your contributions.
 
 ### 1. Definitions
 
@@ -56,6 +56,6 @@ If you have questions about this CLA, please open a GitHub Discussion on this re
 
 ---
 
-**Project:** FlowAI Agents
-**Repository:** github.com/keepithuman/FlowAI-Agents
+**Project:** Network and Infrastructure Agents
+**Repository:** github.com/keepithuman/network-infrastructure-agents
 **License:** GPL-3.0-or-later

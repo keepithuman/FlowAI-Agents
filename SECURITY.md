@@ -9,7 +9,7 @@ This repository is a content marketplace (documentation + exported agent definit
 If you discover a security issue related to this project — for example, a published `.project.json` bundle that would grant an imported agent overly broad or unintended access, a credential or live token accidentally committed, or a documented pattern in `AGENT-FORMAT-SPEC.md` that encourages an insecure practice:
 
 1. **Do not** open a public GitHub issue for it.
-2. Report it privately via [GitHub Security Advisories](https://github.com/keepithuman/FlowAI-Agents/security/advisories/new).
+2. Report it privately via [GitHub Security Advisories](https://github.com/keepithuman/network-infrastructure-agents/security/advisories/new).
 3. Include in your report:
    - Description of the issue
    - Which file(s)/vendor package are affected
