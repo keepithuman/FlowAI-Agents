@@ -28,6 +28,6 @@ Start with [`AGENTS.md`](./AGENTS.md) for the domain overview and design princip
 
 ## Prerequisites
 
-- An Itential Platform instance with the **Citrix NetScaler NITRO API** integration installed and its adapter methods registered as discoverable tools (`GET /tools?name=<method>` should return results under a `NetScaler`-titled, `active: true` integration — see the duplicate-catalog gotcha in `SKILL.md` before assuming any given method resolved correctly).
+- An Itential Platform instance with the **Citrix NetScaler NITRO API** integration installed, with its adapter methods registered as discoverable, active tools. This platform's adapter has previously carried a stale, inactive catalog variant alongside the current one — confirm any given method resolves to the active integration before relying on it in an agent.
 - A configured LLM provider profile + model reachable by the Agent Project Service (`provider.profile` / `provider.model` UUIDs — these are environment-specific and must be re-resolved on import; the values baked into the exported project files reflect the environment they were built on, not a portable default).
 - `view:WorkFlowEngine:ViewData` available as a tool — every mutating agent in this package uses it as the human-approval gate.

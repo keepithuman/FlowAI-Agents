@@ -26,7 +26,7 @@ The exact contract every vendor package must satisfy is defined in [`docs/AGENT-
 ## Using an agent from this marketplace
 
 1. Find the vendor and project you need via [`registry.json`](./registry.json) or by browsing `vendors/`.
-2. Read that vendor's `AGENTS.md` for the design principles and capability map, and `SKILL.md` if you need exact tool names or known gotchas.
+2. Read that vendor's `AGENTS.md` for the design principles and capability map, and `SKILL.md` for the real operational procedure. If you need the exact tool list for a specific agent, that lives in the relevant `.project.json` file.
 3. Import the project file: `POST /agent-project-service/project-bundles/import` on your Itential Platform instance, with the `.project.json` contents as the `bundle` field. You'll need to resolve `provider` (LLM profile/model) to something that exists in *your* environment — the values in each export reflect the platform they were built on, not a portable default.
 4. Verify before trusting: `GET` each imported agent back, confirm every tool resolved to a real `referenceId` (not `unauthorizedReferenceId`), and confirm `provider` is populated. See the vendor's `SKILL.md` for a fuller verification checklist.
 
