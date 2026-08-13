@@ -1,0 +1,78 @@
+{
+  "_id": "917a28eb-d120-46c3-9651-54ec2778f2b9",
+  "name": "Citrix NetScaler - Bot Management",
+  "description": "Agent for bot-detection and mitigation policies and profiles.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:23:01.777Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "0c9f0606-7ba8-47b7-a85b-dab7df5c745b",
+      "name": "Bot Management Agent",
+      "description": "Creates and binds bot-management profiles and policies, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler bot-management agent, handling policies and profiles that detect and mitigate automated/bot traffic against load-balanced applications.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listBotpolicy, listBotprofile) before proposing anything.\n2. Compose the exact proposed bot profile and/or policy, and the vserver binding it needs.\n3. Present it via ViewData: header naming the policy/profile and target vserver, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the profile, then the policy, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind a bot-management policy without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:02.102Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listBotpolicy",
+          "lastKnownName": "listBotpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createBotpolicy",
+          "lastKnownName": "createBotpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateBotpolicy",
+          "lastKnownName": "updateBotpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listBotprofile",
+          "lastKnownName": "listBotprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createBotprofile",
+          "lastKnownName": "createBotprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateBotprofile",
+          "lastKnownName": "updateBotprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createBotpolicyCsvserverBinding",
+          "lastKnownName": "createBotpolicyCsvserverBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createBotpolicyLbvserverBinding",
+          "lastKnownName": "createBotpolicyLbvserverBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

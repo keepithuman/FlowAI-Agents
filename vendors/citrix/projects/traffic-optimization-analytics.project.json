@@ -1,0 +1,212 @@
+{
+  "_id": "06c0e186-7226-4756-b741-38a92bfbbf2a",
+  "name": "Citrix NetScaler - Traffic Optimization & Analytics",
+  "description": "Modular agents for caching, compression, performance profiles, spillover overflow handling, and AppFlow analytics export.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:23:02.345Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "14a221c3-7ee4-427d-942d-e61ec803821e",
+      "name": "AppFlow Analytics Agent",
+      "description": "Creates AppFlow actions, policies, and collectors for exporting traffic analytics, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler AppFlow analytics agent, handling AppFlow actions, policies, and collectors that export traffic analytics to Citrix ADM or a third-party analyzer.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listAppflowpolicy) before proposing anything.\n2. Compose the exact proposed collector, action, and/or policy, and the CS vserver binding it needs.\n3. Present it via ViewData: header naming the object and target vserver, message describing the change and its analytics-visibility effect in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create the collector first (if new), then the action, then the policy, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind an AppFlow object without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:03.215Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listAppflowpolicy",
+          "lastKnownName": "listAppflowpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createAppflowpolicy",
+          "lastKnownName": "createAppflowpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateAppflowpolicy",
+          "lastKnownName": "updateAppflowpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createAppflowaction",
+          "lastKnownName": "createAppflowaction"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateAppflowaction",
+          "lastKnownName": "updateAppflowaction"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createAppflowcollector",
+          "lastKnownName": "createAppflowcollector"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createAppflowpolicyCsvserverBinding",
+          "lastKnownName": "createAppflowpolicyCsvserverBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "7d32700a-5c3b-4d4f-b07b-107536d2f714",
+      "name": "Caching & Compression Agent",
+      "description": "Creates and binds caching and compression policies, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler caching and compression agent, handling cache content groups/policies and compression policies used to reduce backend load and bandwidth.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listCachepolicy, listCmppolicy) before proposing anything.\n2. Compose the exact proposed cache content group/policy or compression policy, and the vserver binding it needs.\n3. Present it via ViewData: header naming the policy and target vserver, message describing the change and its expected bandwidth/latency effect in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the object, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind a caching or compression policy without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:02.616Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listCachepolicy",
+          "lastKnownName": "listCachepolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCachepolicy",
+          "lastKnownName": "createCachepolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateCachepolicy",
+          "lastKnownName": "updateCachepolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCachecontentgroup",
+          "lastKnownName": "createCachecontentgroup"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCachepolicyLbvserverBinding",
+          "lastKnownName": "createCachepolicyLbvserverBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listCmppolicy",
+          "lastKnownName": "listCmppolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCmppolicy",
+          "lastKnownName": "createCmppolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateCmppolicy",
+          "lastKnownName": "updateCmppolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCmppolicyLbvserverBinding",
+          "lastKnownName": "createCmppolicyLbvserverBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "b2e161fe-8e72-4fad-b5dc-a0753c72cc24",
+      "name": "Performance Profiles & Spillover Agent",
+      "description": "Creates TCP/HTTP performance profiles and spillover (overflow) policies, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler performance-profile and spillover agent, handling TCP/HTTP tuning profiles applied to vservers, and spillover policies that redirect traffic to a backup vserver when capacity is exceeded.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listNstcpprofile, listNshttpprofile, listSpilloverpolicy) before proposing anything.\n2. Compose the exact proposed profile or spillover policy, and the vserver binding it needs.\n3. Present it via ViewData: header naming the profile/policy and target vserver, message describing the change and its expected performance/overflow effect in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the object, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind a performance profile or spillover policy without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:02.940Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listNstcpprofile",
+          "lastKnownName": "listNstcpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createNstcpprofile",
+          "lastKnownName": "createNstcpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateNstcpprofile",
+          "lastKnownName": "updateNstcpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listNshttpprofile",
+          "lastKnownName": "listNshttpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createNshttpprofile",
+          "lastKnownName": "createNshttpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateNshttpprofile",
+          "lastKnownName": "updateNshttpprofile"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listSpilloverpolicy",
+          "lastKnownName": "listSpilloverpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createSpilloverpolicy",
+          "lastKnownName": "createSpilloverpolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createSpilloverpolicyLbvserverBinding",
+          "lastKnownName": "createSpilloverpolicyLbvserverBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

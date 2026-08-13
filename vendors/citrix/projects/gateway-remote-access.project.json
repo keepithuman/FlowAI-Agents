@@ -1,0 +1,131 @@
+{
+  "_id": "127804e5-b78a-449a-9cfd-3793e396f79d",
+  "name": "Citrix NetScaler - Gateway & Remote Access",
+  "description": "Modular agents for SSL VPN (NetScaler Gateway) remote access and ICA proxy access to Citrix Virtual Apps/Desktops.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:22:14.290Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "74b1fc4c-e6c8-4b29-8b97-f28a3c82cc72",
+      "name": "ICA Proxy Agent",
+      "description": "Creates and binds ICA policies for Citrix Virtual Apps/Desktops access through NetScaler Gateway, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler ICA proxy agent, handling ICA policies and actions that control access to Citrix Virtual Apps/Desktops through NetScaler Gateway.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listIcapolicy) before proposing anything.\n2. Compose the exact proposed ICA action/policy and its binding to a VPN vserver.\n3. Present it via ViewData: header naming the policy/vserver, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the action first, then the policy, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind an ICA policy without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:22:14.992Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listIcapolicy",
+          "lastKnownName": "listIcapolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createIcapolicy",
+          "lastKnownName": "createIcapolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateIcapolicy",
+          "lastKnownName": "updateIcapolicy"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createIcaaction",
+          "lastKnownName": "createIcaaction"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateIcaaction",
+          "lastKnownName": "updateIcaaction"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createIcapolicyVpnvserverBinding",
+          "lastKnownName": "createIcapolicyVpnvserverBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listIcapolicyVpnvserverBinding",
+          "lastKnownName": "listIcapolicyVpnvserverBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "7a164b74-4bed-4b7c-a934-e3166c7ce1b4",
+      "name": "SSL VPN Gateway Agent",
+      "description": "Creates and updates NetScaler Gateway (SSL VPN) virtual servers and their authentication/intranet-app bindings, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler Gateway (SSL VPN) agent, handling VPN vservers and their authentication and intranet-application bindings for remote access.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listVpnvserver) before proposing anything.\n2. Compose the exact proposed vpnvserver object and, if needed, the auth-policy binding (LDAP/RADIUS) or intranet-application binding it needs.\n3. Present it via ViewData: header naming the vserver, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the vserver, then bind it.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create, update, or bind a Gateway/VPN object without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:22:14.609Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listVpnvserver",
+          "lastKnownName": "listVpnvserver"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVpnvserver",
+          "lastKnownName": "createVpnvserver"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateVpnvserver",
+          "lastKnownName": "updateVpnvserver"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVpnglobalAuthenticationldappolicyBinding",
+          "lastKnownName": "createVpnglobalAuthenticationldappolicyBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVpnglobalAuthenticationradiuspolicyBinding",
+          "lastKnownName": "createVpnglobalAuthenticationradiuspolicyBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVpnglobalIntranetapplicationBinding",
+          "lastKnownName": "createVpnglobalIntranetapplicationBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

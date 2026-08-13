@@ -1,0 +1,347 @@
+{
+  "$schemaVersion": 1,
+  "description": "Machine-readable index of every vendor, project, and agent in the FlowAI Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the schema this must conform to when adding a vendor.",
+  "vendors": [
+    {
+      "slug": "citrix",
+      "name": "Citrix",
+      "domain": "NetScaler ADC",
+      "path": "vendors/citrix",
+      "readme": "vendors/citrix/README.md",
+      "agentsDoc": "vendors/citrix/AGENTS.md",
+      "skillDoc": "vendors/citrix/SKILL.md",
+      "projectCount": 13,
+      "agentCount": 33,
+      "projects": [
+        {
+          "slug": "load-balancing",
+          "name": "Citrix NetScaler - Load Balancing",
+          "description": "LB virtual servers, backend services/service groups, bindings, and health monitors",
+          "path": "vendors/citrix/projects/load-balancing.project.json",
+          "sourceProjectId": "395734af-f23b-4cef-b4cd-ae6a59a3cbbd",
+          "agentCount": 3,
+          "agents": [
+            {
+              "name": "LB Binding & Health Monitor Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "LB Service & Service Group Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "LB VServer Agent",
+              "toolCount": 5,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "traffic-routing",
+          "name": "Citrix NetScaler - Traffic Routing",
+          "description": "Content switching, responder policies, rewrite policies, and policy building blocks",
+          "path": "vendors/citrix/projects/traffic-routing.project.json",
+          "sourceProjectId": "287993a2-9c40-4567-b2b8-ff06a2671a41",
+          "agentCount": 5,
+          "agents": [
+            {
+              "name": "CS Binding Agent",
+              "toolCount": 5,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "CS VServer & Policy Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Policy Building Blocks Agent",
+              "toolCount": 10,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Responder Policy Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Rewrite Policy Agent",
+              "toolCount": 6,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "ssl-certificates",
+          "name": "Citrix NetScaler - SSL Certificates",
+          "description": "SSL certificate installation, renewal, vserver binding, and expiry monitoring",
+          "path": "vendors/citrix/projects/ssl-certificates.project.json",
+          "sourceProjectId": "b1e772f2-d64e-410a-b523-772b2e798976",
+          "agentCount": 1,
+          "agents": [
+            {
+              "name": "SSL Certificate Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "gslb-multi-site",
+          "name": "Citrix NetScaler - GSLB & Multi-Site",
+          "description": "GSLB vservers/services, sites, domain bindings, and DR failover",
+          "path": "vendors/citrix/projects/gslb-multi-site.project.json",
+          "sourceProjectId": "7efefbac-70a7-40b5-b96b-84755b524606",
+          "agentCount": 2,
+          "agents": [
+            {
+              "name": "GSLB Site & Domain Binding Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "GSLB VServer & Service Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "security-access",
+          "name": "Citrix NetScaler - Security & Access",
+          "description": "WAF (AppFirewall) policies, LDAP/RADIUS authentication, and rate limiting",
+          "path": "vendors/citrix/projects/security-access.project.json",
+          "sourceProjectId": "247770f1-a5f5-47b2-894a-af575ae2e8c4",
+          "agentCount": 3,
+          "agents": [
+            {
+              "name": "Authentication Policy Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Rate Limiting Agent",
+              "toolCount": 5,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "WAF Policy Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "monitoring-diagnostics",
+          "name": "Citrix NetScaler - Monitoring & Diagnostics",
+          "description": "Read-only appliance/vserver/service health and certificate-expiry reporting",
+          "path": "vendors/citrix/projects/monitoring-diagnostics.project.json",
+          "sourceProjectId": "c7d727f0-003b-4d3a-9b09-3f846f63203e",
+          "agentCount": 2,
+          "agents": [
+            {
+              "name": "Config & Certificate Diagnostics Agent",
+              "toolCount": 6,
+              "requiresApproval": false,
+              "readOnly": true
+            },
+            {
+              "name": "Vserver & Service Health Agent",
+              "toolCount": 7,
+              "requiresApproval": false,
+              "readOnly": true
+            }
+          ]
+        },
+        {
+          "slug": "gateway-remote-access",
+          "name": "Citrix NetScaler - Gateway & Remote Access",
+          "description": "NetScaler Gateway (SSL VPN) and ICA proxy access to Citrix Virtual Apps/Desktops",
+          "path": "vendors/citrix/projects/gateway-remote-access.project.json",
+          "sourceProjectId": "127804e5-b78a-449a-9cfd-3793e396f79d",
+          "agentCount": 2,
+          "agents": [
+            {
+              "name": "ICA Proxy Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "SSL VPN Gateway Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "system-administration",
+          "name": "Citrix NetScaler - System Administration",
+          "description": "Admin RBAC, feature/mode/license management, and configuration backup",
+          "path": "vendors/citrix/projects/system-administration.project.json",
+          "sourceProjectId": "cd66476a-ee4d-45b9-9018-c94ae289a462",
+          "agentCount": 3,
+          "agents": [
+            {
+              "name": "Config Backup Agent",
+              "toolCount": 4,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Feature & Licensing Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "RBAC Agent",
+              "toolCount": 10,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "networking-fundamentals",
+          "name": "Citrix NetScaler - Networking Fundamentals",
+          "description": "IP addresses, VLANs, static routes, interfaces, LACP channels, and NAT",
+          "path": "vendors/citrix/projects/networking-fundamentals.project.json",
+          "sourceProjectId": "3680ea53-e1e8-41fa-8811-24343b17ae56",
+          "agentCount": 4,
+          "agents": [
+            {
+              "name": "Channel (LACP) Agent",
+              "toolCount": 4,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "IP & VLAN Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "NAT Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Routing & Interfaces Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "clustering-ha",
+          "name": "Citrix NetScaler - Clustering & High Availability",
+          "description": "Multi-box cluster setup and high-availability node pairing",
+          "path": "vendors/citrix/projects/clustering-ha.project.json",
+          "sourceProjectId": "b439bcf0-eaea-41ce-b68f-e172a887e7c0",
+          "agentCount": 2,
+          "agents": [
+            {
+              "name": "Clustering Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "HA Pair Agent",
+              "toolCount": 4,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "dns-services",
+          "name": "Citrix NetScaler - DNS Services",
+          "description": "DNS record management (A/CNAME/NS/PTR/SOA)",
+          "path": "vendors/citrix/projects/dns-services.project.json",
+          "sourceProjectId": "6e5cc312-473a-462b-8899-8454da7b0ea9",
+          "agentCount": 2,
+          "agents": [
+            {
+              "name": "Forward Record Agent (A/CNAME)",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Zone & Reverse Record Agent (NS/PTR/SOA)",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "bot-management",
+          "name": "Citrix NetScaler - Bot Management",
+          "description": "Bot-detection and mitigation policies and profiles",
+          "path": "vendors/citrix/projects/bot-management.project.json",
+          "sourceProjectId": "917a28eb-d120-46c3-9651-54ec2778f2b9",
+          "agentCount": 1,
+          "agents": [
+            {
+              "name": "Bot Management Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        },
+        {
+          "slug": "traffic-optimization-analytics",
+          "name": "Citrix NetScaler - Traffic Optimization & Analytics",
+          "description": "Caching, compression, TCP/HTTP performance profiles, spillover, and AppFlow analytics export",
+          "path": "vendors/citrix/projects/traffic-optimization-analytics.project.json",
+          "sourceProjectId": "06c0e186-7226-4756-b741-38a92bfbbf2a",
+          "agentCount": 3,
+          "agents": [
+            {
+              "name": "AppFlow Analytics Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Caching & Compression Agent",
+              "toolCount": 10,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Performance Profiles & Spillover Agent",
+              "toolCount": 10,
+              "requiresApproval": true,
+              "readOnly": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

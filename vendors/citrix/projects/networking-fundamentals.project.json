@@ -1,0 +1,241 @@
+{
+  "_id": "3680ea53-e1e8-41fa-8811-24343b17ae56",
+  "name": "Citrix NetScaler - Networking Fundamentals",
+  "description": "Modular agents for core L2/L3 networking on the appliance — IP addresses, VLANs, routing, interfaces, LACP channels, and NAT.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:23:07.581Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "4ca07173-952f-4573-8e3e-22089477ee96",
+      "name": "Channel (LACP) Agent",
+      "description": "Creates LACP channels and binds interfaces to them, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler LACP channel agent, handling link-aggregation channel configuration and interface bindings.\n\nGiven a free-text request ({{request}}):\n1. Look up current channels first before proposing anything.\n2. Compose the exact proposed channel and the interfaces to bind into it.\n3. Present it via ViewData: header naming the channel, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create the channel, then bind the interfaces to it, exactly as presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create a channel or bind an interface without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:08.441Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createChannel",
+          "lastKnownName": "createChannel"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateChannel",
+          "lastKnownName": "updateChannel"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createChannelInterfaceBinding",
+          "lastKnownName": "createChannelInterfaceBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "87a93a64-354d-4c6f-8fc0-9cdd5484bc76",
+      "name": "IP & VLAN Agent",
+      "description": "Creates and updates NetScaler IP addresses and VLANs, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler IP and VLAN agent, handling IP address and VLAN configuration.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listNsip, listVlan) before proposing anything — this is high-risk, live-appliance-network config, never skip this step.\n2. Compose the exact proposed IP or VLAN object, and any interface/IP binding it needs.\n3. Present it via ViewData: header naming the object, message describing the change and its potential traffic impact in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update the object, then bind it if applicable.\n5. On rejection: apply nothing, report the change was declined.\n\nNever change IP or VLAN configuration without approval — a bad change can take the appliance off the network. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:07.859Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listNsip",
+          "lastKnownName": "listNsip"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createNsip",
+          "lastKnownName": "createNsip"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateNsip",
+          "lastKnownName": "updateNsip"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listVlan",
+          "lastKnownName": "listVlan"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVlan",
+          "lastKnownName": "createVlan"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateVlan",
+          "lastKnownName": "updateVlan"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVlanInterfaceBinding",
+          "lastKnownName": "createVlanInterfaceBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createVlanNsipBinding",
+          "lastKnownName": "createVlanNsipBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "7d0fd947-18cc-4229-a84d-ec1a0d2e4d32",
+      "name": "NAT Agent",
+      "description": "Creates and updates inbound and reverse NAT rules, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler NAT agent, handling inbound NAT (INAT) and reverse NAT (RNAT) rules.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listInat, listRnat) before proposing anything.\n2. Compose the exact proposed NAT rule.\n3. Present it via ViewData: header naming the NAT rule, message describing the change and its traffic impact in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create or update a NAT rule without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:08.756Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listInat",
+          "lastKnownName": "listInat"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createInat",
+          "lastKnownName": "createInat"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateInat",
+          "lastKnownName": "updateInat"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listRnat",
+          "lastKnownName": "listRnat"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createRnat",
+          "lastKnownName": "createRnat"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateRnat",
+          "lastKnownName": "updateRnat"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "6d03c921-565c-4baa-9689-0c89b932faea",
+      "name": "Routing & Interfaces Agent",
+      "description": "Creates and updates static routes and network interfaces, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler routing and interfaces agent, handling static routes and physical/logical interface configuration.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listRoute, listInterface) before proposing anything — this is high-risk, live-appliance-network config, never skip this step.\n2. Compose the exact proposed route or interface change.\n3. Present it via ViewData: header naming the route/interface, message describing the change and its potential traffic impact in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update/delete exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever change routing or interface configuration without approval — a bad route or interface change can take the appliance off the network. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:08.157Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listRoute",
+          "lastKnownName": "listRoute"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createRoute",
+          "lastKnownName": "createRoute"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateRoute",
+          "lastKnownName": "updateRoute"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:deleteRoute",
+          "lastKnownName": "deleteRoute"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listInterface",
+          "lastKnownName": "listInterface"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateInterface",
+          "lastKnownName": "updateInterface"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createInterfacepair",
+          "lastKnownName": "createInterfacepair"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

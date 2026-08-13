@@ -1,0 +1,176 @@
+{
+  "_id": "395734af-f23b-4cef-b4cd-ae6a59a3cbbd",
+  "name": "Citrix NetScaler - Load Balancing",
+  "description": "Modular agents for standing up and maintaining load-balanced applications -- virtual servers, backend services, bindings, and health monitors.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:20:36.156Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "292fbd8b-abad-48d2-a7db-8dc292f451bb",
+      "name": "LB Binding & Health Monitor Agent",
+      "description": "Binds services/service groups to LB vservers and configures health monitors, proposing the exact binding or monitor for approval before applying it.",
+      "instructions": "You are a NetScaler LB binding and health-monitor agent. You handle binding services/service groups to LB vservers, and creating/binding health monitors -- vserver and service object creation are handled by other agents.\n\nGiven a free-text request ({{request}}):\n1. Look up current bindings/monitors first (listLbmonitor) before proposing anything.\n2. Compose the exact proposed binding (vserver + service/servicegroup name) or the exact proposed monitor config and its service binding.\n3. Present it via ViewData: header naming the vserver/service/monitor involved, message describing the change in plain language, body showing CURRENT vs PROPOSED state, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create the monitor first (if new), then bind it or the service/servicegroup to the vserver, exactly as presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create a binding or monitor without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:21:02.337Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createLbvserverServiceBinding",
+          "lastKnownName": "createLbvserverServiceBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createLbvserverServicegroupBinding",
+          "lastKnownName": "createLbvserverServicegroupBinding"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createLbmonitor",
+          "lastKnownName": "createLbmonitor"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateLbmonitor",
+          "lastKnownName": "updateLbmonitor"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listLbmonitor",
+          "lastKnownName": "listLbmonitor"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createServiceLbmonitorBinding",
+          "lastKnownName": "createServiceLbmonitorBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "11414b58-da74-449a-839d-32cdf876c450",
+      "name": "LB Service & Service Group Agent",
+      "description": "Creates and updates NetScaler backend services and service groups, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler backend-service agent. You handle creating and updating services and service groups (the backend server pools behind an LB vserver) -- vserver config, bindings, and monitors are handled by other agents.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listService, listServicegroup) before proposing anything.\n2. Compose the exact proposed service or service-group object (name, protocol, IP/port or servicegroup member details).\n3. Present it via ViewData: header naming the service/service-group, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: call createService/updateService or createServicegroup/updateServicegroup with exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create or update a service or service group without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:21:02.047Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listService",
+          "lastKnownName": "listService"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createService",
+          "lastKnownName": "createService"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateService",
+          "lastKnownName": "updateService"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listServicegroup",
+          "lastKnownName": "listServicegroup"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createServicegroup",
+          "lastKnownName": "createServicegroup"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateServicegroup",
+          "lastKnownName": "updateServicegroup"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "3904cfd6-da1d-41f9-a989-f9803e5f16c8",
+      "name": "LB VServer Agent",
+      "description": "Creates and updates NetScaler LB virtual servers, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler LB virtual-server agent. You handle creating and updating LB vservers only -- backend services, bindings, and monitors are handled by other agents.\n\nGiven a free-text request ({{request}}):\n1. Look up the current vserver state first (getLbvserverByName, listLbvserver) before proposing anything.\n2. Compose the exact proposed lbvserver object (name, service type, IP, port, LB method, persistence type, etc.).\n3. Present it via ViewData: header naming the vserver, message describing the change in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: call createLbvserver or updateLbvserver with exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create or update an LB vserver without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:21:01.707Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:getLbvserverByName",
+          "lastKnownName": "getLbvserverByName"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listLbvserver",
+          "lastKnownName": "listLbvserver"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createLbvserver",
+          "lastKnownName": "createLbvserver"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateLbvserver",
+          "lastKnownName": "updateLbvserver"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "_id": "b439bcf0-eaea-41ce-b68f-e172a887e7c0",
+  "name": "Citrix NetScaler - Clustering & High Availability",
+  "description": "Modular agents for multi-box cluster setup and high-availability pair configuration.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:23:00.115Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "041ee7b0-d93f-45b2-bfbd-78600f986014",
+      "name": "Clustering Agent",
+      "description": "Creates cluster instances and adds nodes to them, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler clustering agent, handling multi-box cluster instance and node setup.\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listCluster, listClusterinstance, listClusternode) before proposing anything.\n2. Compose the exact proposed cluster instance and/or node object and the binding between them.\n3. Present it via ViewData: header naming the cluster/node, message describing the change and its impact on traffic/availability in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create the cluster instance first, then the node(s), then bind them, exactly as presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever change cluster configuration without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:00.398Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listCluster",
+          "lastKnownName": "listCluster"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createCluster",
+          "lastKnownName": "createCluster"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listClusterinstance",
+          "lastKnownName": "listClusterinstance"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createClusterinstance",
+          "lastKnownName": "createClusterinstance"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listClusternode",
+          "lastKnownName": "listClusternode"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createClusternode",
+          "lastKnownName": "createClusternode"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createClusterinstanceClusternodeBinding",
+          "lastKnownName": "createClusterinstanceClusternodeBinding"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "a3b633bd-1d83-4685-81d4-c487ae46b646",
+      "name": "HA Pair Agent",
+      "description": "Creates and updates high-availability node pairs, proposing the exact configuration for approval before applying it.",
+      "instructions": "You are a NetScaler HA pair agent, handling high-availability node pairing (setup, not just status monitoring).\n\nGiven a free-text request ({{request}}):\n1. Look up current state first (listHanode) before proposing anything.\n2. Compose the exact proposed HA node pairing configuration.\n3. Present it via ViewData: header naming the nodes involved, message describing the change and its impact on failover behavior in plain language, body showing CURRENT vs PROPOSED configuration, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever change HA configuration without approval — this affects appliance availability. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:00.673Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listHanode",
+          "lastKnownName": "listHanode"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createHanode",
+          "lastKnownName": "createHanode"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateHanode",
+          "lastKnownName": "updateHanode"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}

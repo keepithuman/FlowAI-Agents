@@ -1,0 +1,127 @@
+{
+  "_id": "6e5cc312-473a-462b-8899-8454da7b0ea9",
+  "name": "Citrix NetScaler - DNS Services",
+  "description": "Modular agents for DNS record management supporting DNS load balancing and authoritative DNS hosted on the appliance.",
+  "agentProjectBundleVersion": 1,
+  "created": "2026-08-13T19:23:00.922Z",
+  "createdBy": {
+    "provenance": "CloudAAA",
+    "username": "ankit.bhansali@itential.com"
+  },
+  "agents": [
+    {
+      "_id": "bb71107a-57c8-4075-b54f-b615e2ec2947",
+      "name": "Forward Record Agent (A/CNAME)",
+      "description": "Creates and updates DNS A and CNAME records, proposing the exact record for approval before applying it.",
+      "instructions": "You are a NetScaler DNS forward-record agent, handling A (address) and CNAME (alias) records.\n\nGiven a free-text request ({{request}}):\n1. Look up current records first (listDnsaddrec, listDnscnamerec) before proposing anything.\n2. Compose the exact proposed record — new record, or an update to an existing one's target/TTL.\n3. Present it via ViewData: header naming the record and domain, message describing the change in plain language, body showing CURRENT vs PROPOSED record, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create/update exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create or update a DNS record without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:01.203Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listDnsaddrec",
+          "lastKnownName": "listDnsaddrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createDnsaddrec",
+          "lastKnownName": "createDnsaddrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateDnsaddrec",
+          "lastKnownName": "updateDnsaddrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listDnscnamerec",
+          "lastKnownName": "listDnscnamerec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createDnscnamerec",
+          "lastKnownName": "createDnscnamerec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:updateDnscnamerec",
+          "lastKnownName": "updateDnscnamerec"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    },
+    {
+      "_id": "684315a5-7f84-4068-b9c3-f330f2bfe83d",
+      "name": "Zone & Reverse Record Agent (NS/PTR/SOA)",
+      "description": "Creates and updates DNS NS, PTR, and SOA records, proposing the exact record for approval before applying it.",
+      "instructions": "You are a NetScaler DNS zone and reverse-record agent, handling NS (nameserver), PTR (reverse-lookup), and SOA (zone authority) records.\n\nGiven a free-text request ({{request}}):\n1. Look up current records first (listDnsnsrec, listDnsptrrec, listDnssoarec) before proposing anything.\n2. Compose the exact proposed record.\n3. Present it via ViewData: header naming the record and domain/zone, message describing the change in plain language, body showing CURRENT vs PROPOSED record, btn_success = \"Approve\", btn_failure = \"Reject\".\n4. On approval: create exactly what was presented.\n5. On rejection: apply nothing, report the change was declined.\n\nNever create a DNS record without approval. Read-only lookups do not require approval.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "request"
+        ],
+        "properties": {
+          "request": {
+            "type": "string"
+          }
+        }
+      },
+      "created": "2026-08-13T19:23:01.527Z",
+      "createdBy": {
+        "username": "ankit.bhansali@itential.com",
+        "provenance": "CloudAAA"
+      },
+      "provider": {
+        "profileName": "Itential NBA POC",
+        "modelName": "claude-sonnet-4-6"
+      },
+      "tools": [
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listDnsnsrec",
+          "lastKnownName": "listDnsnsrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createDnsnsrec",
+          "lastKnownName": "createDnsnsrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listDnsptrrec",
+          "lastKnownName": "listDnsptrrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createDnsptrrec",
+          "lastKnownName": "createDnsptrrec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:listDnssoarec",
+          "lastKnownName": "listDnssoarec"
+        },
+        {
+          "referenceId": "integration:Citrix NetScaler NITRO API%3Alatest:NetScaler:createDnssoarec",
+          "lastKnownName": "createDnssoarec"
+        },
+        {
+          "referenceId": "view:WorkFlowEngine:ViewData",
+          "lastKnownName": "ViewData"
+        }
+      ]
+    }
+  ]
+}
