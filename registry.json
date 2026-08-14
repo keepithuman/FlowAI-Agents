@@ -1,6 +1,6 @@
 {
-  "$schemaVersion": 2,
-  "description": "Machine-readable index of every vendor skill in the Network and Infrastructure Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the format this must conform to when adding a vendor. Schema v2 dropped the agent/project structure (v1) in favor of pure skill content — procedure and tool reference together in one SKILL.md per vendor — with no dependency on any specific automation platform.",
+  "$schemaVersion": 3,
+  "description": "Machine-readable index of every vendor and skill in the Network and Infrastructure Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the format this must conform to when adding a vendor or skill. Schema v3 splits each vendor into individual, single-domain skills (one SKILL.md per functional domain, each self-contained with procedure + tool reference) instead of one monolithic SKILL.md per vendor (v2) or an agent/project structure (v1). No dependency on any specific automation platform.",
   "vendors": [
     {
       "slug": "citrix",
@@ -8,37 +8,22 @@
       "domain": "NetScaler ADC",
       "path": "vendors/citrix",
       "readme": "vendors/citrix/README.md",
-      "skillDoc": "vendors/citrix/SKILL.md",
       "operationCount": 211,
       "source": "Citrix NetScaler NITRO 14.1 OpenAPI spec, cross-checked against a live NetScaler NITRO REST API adapter's registered task catalog",
-      "categories": [
-        "Load Balancing",
-        "Traffic Routing — Content Switching",
-        "Traffic Routing — Responder Policies",
-        "Traffic Routing — Rewrite Policies",
-        "Traffic Routing — Policy Building Blocks",
-        "SSL Certificates",
-        "GSLB & Multi-Site",
-        "Security & Access — WAF (AppFirewall)",
-        "Security & Access — Authentication",
-        "Security & Access — Rate Limiting",
-        "Monitoring & Diagnostics",
-        "Gateway & Remote Access — SSL VPN",
-        "Gateway & Remote Access — ICA Proxy",
-        "System Administration — RBAC",
-        "System Administration — Feature & Licensing",
-        "System Administration — Config Backup",
-        "Networking Fundamentals — IP & VLAN",
-        "Networking Fundamentals — Routing & Interfaces",
-        "Networking Fundamentals — LACP Channels",
-        "Networking Fundamentals — NAT",
-        "Clustering & High Availability",
-        "DNS Services — Forward Records",
-        "DNS Services — Zone & Reverse Records",
-        "Bot Management",
-        "Traffic Optimization & Analytics — Caching & Compression",
-        "Traffic Optimization & Analytics — Performance Profiles & Spillover",
-        "Traffic Optimization & Analytics — AppFlow"
+      "skills": [
+        { "slug": "load-balancing", "name": "citrix-load-balancing", "path": "vendors/citrix/load-balancing/SKILL.md", "operationCount": 16 },
+        { "slug": "traffic-routing", "name": "citrix-traffic-routing", "path": "vendors/citrix/traffic-routing/SKILL.md", "operationCount": 34 },
+        { "slug": "ssl-certificates", "name": "citrix-ssl-certificates", "path": "vendors/citrix/ssl-certificates/SKILL.md", "operationCount": 6 },
+        { "slug": "gslb-multi-site", "name": "citrix-gslb-multi-site", "path": "vendors/citrix/gslb-multi-site/SKILL.md", "operationCount": 12 },
+        { "slug": "security-access", "name": "citrix-security-access", "path": "vendors/citrix/security-access/SKILL.md", "operationCount": 20 },
+        { "slug": "monitoring-diagnostics", "name": "citrix-monitoring-diagnostics", "path": "vendors/citrix/monitoring-diagnostics/SKILL.md", "operationCount": 13 },
+        { "slug": "gateway-remote-access", "name": "citrix-gateway-remote-access", "path": "vendors/citrix/gateway-remote-access/SKILL.md", "operationCount": 13 },
+        { "slug": "system-administration", "name": "citrix-system-administration", "path": "vendors/citrix/system-administration/SKILL.md", "operationCount": 18 },
+        { "slug": "networking-fundamentals", "name": "citrix-networking-fundamentals", "path": "vendors/citrix/networking-fundamentals/SKILL.md", "operationCount": 24 },
+        { "slug": "clustering-ha", "name": "citrix-clustering-ha", "path": "vendors/citrix/clustering-ha/SKILL.md", "operationCount": 10 },
+        { "slug": "dns-services", "name": "citrix-dns-services", "path": "vendors/citrix/dns-services/SKILL.md", "operationCount": 12 },
+        { "slug": "bot-management", "name": "citrix-bot-management", "path": "vendors/citrix/bot-management/SKILL.md", "operationCount": 8 },
+        { "slug": "traffic-optimization-analytics", "name": "citrix-traffic-optimization-analytics", "path": "vendors/citrix/traffic-optimization-analytics/SKILL.md", "operationCount": 25 }
       ]
     },
     {
@@ -47,27 +32,26 @@
       "domain": "vSphere",
       "path": "vendors/vmware",
       "readme": "vendors/vmware/README.md",
-      "skillDoc": "vendors/vmware/SKILL.md",
       "operationCount": 85,
       "source": "A live VMware vSphere Automation REST adapter's registered task catalog (1,363 total methods available; 85 selected as the common-operations subset), naming matching VMware's own dot-notation API namespace",
-      "categories": [
-        "VM Operations",
-        "Datacenter, Cluster, Host & Network",
-        "Storage & Datastore",
-        "Content Library & Templates",
-        "Tagging & Categorization",
-        "Certificate Management",
-        "vCenter & Appliance Diagnostics",
-        "Resource Pool Management",
-        "Access Control (RBAC)",
-        "Guest Customization",
-        "Cluster Configuration & Compliance",
-        "VM Encryption & KMS",
-        "Performance Metrics"
-      ],
       "knownGaps": [
         "No VM snapshot management (create/revert/delete) in this API surface",
         "No standard distributed-switch/port-group management (only Kubernetes/Tanzu-scoped switch methods exist)"
+      ],
+      "skills": [
+        { "slug": "vm-operations", "name": "vmware-vm-operations", "path": "vendors/vmware/vm-operations/SKILL.md", "operationCount": 5 },
+        { "slug": "datacenter-cluster-host-network", "name": "vmware-datacenter-cluster-host-network", "path": "vendors/vmware/datacenter-cluster-host-network/SKILL.md", "operationCount": 8 },
+        { "slug": "storage-datastore", "name": "vmware-storage-datastore", "path": "vendors/vmware/storage-datastore/SKILL.md", "operationCount": 7 },
+        { "slug": "content-library-templates", "name": "vmware-content-library-templates", "path": "vendors/vmware/content-library-templates/SKILL.md", "operationCount": 8 },
+        { "slug": "tagging-categorization", "name": "vmware-tagging-categorization", "path": "vendors/vmware/tagging-categorization/SKILL.md", "operationCount": 7 },
+        { "slug": "certificate-management", "name": "vmware-certificate-management", "path": "vendors/vmware/certificate-management/SKILL.md", "operationCount": 7 },
+        { "slug": "vcenter-appliance-diagnostics", "name": "vmware-vcenter-appliance-diagnostics", "path": "vendors/vmware/vcenter-appliance-diagnostics/SKILL.md", "operationCount": 7 },
+        { "slug": "resource-pool-management", "name": "vmware-resource-pool-management", "path": "vendors/vmware/resource-pool-management/SKILL.md", "operationCount": 5 },
+        { "slug": "access-control-rbac", "name": "vmware-access-control-rbac", "path": "vendors/vmware/access-control-rbac/SKILL.md", "operationCount": 7 },
+        { "slug": "guest-customization", "name": "vmware-guest-customization", "path": "vendors/vmware/guest-customization/SKILL.md", "operationCount": 5 },
+        { "slug": "cluster-configuration-compliance", "name": "vmware-cluster-configuration-compliance", "path": "vendors/vmware/cluster-configuration-compliance/SKILL.md", "operationCount": 6 },
+        { "slug": "vm-encryption-kms", "name": "vmware-vm-encryption-kms", "path": "vendors/vmware/vm-encryption-kms/SKILL.md", "operationCount": 6 },
+        { "slug": "performance-metrics", "name": "vmware-performance-metrics", "path": "vendors/vmware/performance-metrics/SKILL.md", "operationCount": 7 }
       ]
     }
   ]

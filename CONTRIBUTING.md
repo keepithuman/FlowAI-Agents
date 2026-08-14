@@ -1,13 +1,13 @@
 # Contributing to Network and Infrastructure Agents
 
-Thank you for your interest in contributing to Network and Infrastructure Agents! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every vendor package must clear.
+Thank you for your interest in contributing to Network and Infrastructure Agents! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every skill must clear.
 
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [Contributor License Agreement](#contributor-license-agreement)
 - [What you can contribute](#what-you-can-contribute)
-- [Vendor Package Submission Checklist](#vendor-package-submission-checklist)
+- [Skill Submission Checklist](#skill-submission-checklist)
 - [Getting Started](#getting-started)
 - [Contributing Process](#contributing-process)
 - [Pull Request Guidelines](#pull-request-guidelines)
@@ -24,21 +24,23 @@ By participating in this project, you are expected to uphold the [Code of Conduc
 
 ## What you can contribute
 
-- A **new vendor package** (`vendors/<slug>/`) — see the checklist below.
-- A **refinement to an existing vendor's operational procedure or tool reference** in `SKILL.md` — a missing step, a caveat woven into the wrong place, a clearer explanation of a decision point, a missing or incorrectly-described operation — these are valuable on their own.
-- Improvements to [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) itself, if you find the format spec is missing something a real vendor package needed.
+- A **new skill** within an existing vendor (`vendors/<slug>/<new-skill-slug>/SKILL.md`) — a functional domain that vendor's package doesn't cover yet.
+- A **new vendor package** (`vendors/<slug>/`, one or more skill folders inside it) — see the checklist below.
+- A **refinement to an existing skill's operational procedure or tool reference** — a missing step, a caveat woven into the wrong place, a clearer explanation of a decision point, a missing or incorrectly-described operation — these are valuable on their own.
+- Improvements to [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) itself, if you find the format spec is missing something a real skill needed.
 
-## Vendor Package Submission Checklist
+## Skill Submission Checklist
 
 Full detail lives in [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) — this is the short version to check against before opening a PR:
 
-- [ ] **Every operation named in `SKILL.md` is real and confirmed against the vendor's own documentation.** Never invent or paraphrase an operation name — cite the exact OpenAPI spec, API doc, or CLI reference in `README.md`'s Source section.
-- [ ] Directory is `vendors/<vendor-slug>/` — lowercase-kebab-case.
-- [ ] `README.md` and `SKILL.md` are both present and each has the required sections from the format spec.
+- [ ] **Every operation named in the skill's `SKILL.md` is real and confirmed against the vendor's own documentation.** Never invent or paraphrase an operation name — cite the exact OpenAPI spec, API doc, or CLI reference in the vendor's `README.md`'s Source section.
+- [ ] Vendor directory is `vendors/<vendor-slug>/`, skill directory is `vendors/<vendor-slug>/<skill-slug>/` — both lowercase-kebab-case.
+- [ ] The skill maps to one functional domain, not a bundle of unrelated domains crammed together to avoid adding another folder.
+- [ ] `SKILL.md` has the required sections from the format spec, and the vendor's `README.md` lists the new skill.
 - [ ] `SKILL.md` does not bake in agent architecture — no tool-count ceilings, no named approval-UI mechanism, no "agents" as objects this package defines. That's a downstream decision for whoever consumes the skill.
 - [ ] No offensive, destructive, or evasive capability anywhere in the package.
-- [ ] `registry.json` updated with your vendor's entry, matching the actual contents of `vendors/<slug>/`.
-- [ ] Caveats in `SKILL.md`'s operational procedures are real and woven into the relevant step — not quarantined in a separate list, and not hypothetical.
+- [ ] `registry.json` updated with the new/changed skill entry, matching the actual contents of `vendors/<slug>/`.
+- [ ] Caveats in the procedure are real and woven into the relevant step — not quarantined in a separate list, and not hypothetical.
 
 ## Getting Started
 
@@ -72,13 +74,13 @@ Format: `<type>/<description>`, lowercase letters/numbers/hyphens only in the de
 
 | Type | Use for |
 |---|---|
-| `feature/` | A new vendor package |
+| `feature/` | A new vendor package or a new skill within an existing vendor |
 | `fix/` | Correcting a wrong operation name, description, or documentation error |
-| `refactor/` | Restructuring an existing vendor package without changing its documented behavior |
+| `refactor/` | Restructuring an existing skill without changing its documented behavior |
 | `docs/` | Format spec or top-level documentation changes |
 | `chore/` | Registry regeneration, housekeeping |
 
-Examples: `feature/add-cisco-ios-vendor`, `fix/correct-nslicense-operation-description`, `docs/clarify-tools-section-requirements`
+Examples: `feature/add-cisco-ios-vendor`, `feature/add-citrix-appflow-skill`, `fix/correct-nslicense-operation-description`, `docs/clarify-tools-section-requirements`
 
 ### Commit Message Format
 
@@ -86,7 +88,7 @@ Follows [Conventional Commits](https://www.conventionalcommits.org/): `<type>[(s
 
 | Type | Meaning |
 |---|---|
-| `feat` | New vendor package |
+| `feat` | New vendor package or skill |
 | `fix` | Correcting a wrong operation name, description, or doc error |
 | `docs` | Documentation-only change |
 | `refactor` | Restructuring without behavior change |
@@ -94,6 +96,7 @@ Follows [Conventional Commits](https://www.conventionalcommits.org/): `<type>[(s
 
 Examples:
 - `feat(cisco-ios): add vendor package covering IOS device configuration`
+- `feat(citrix): add dns-services skill`
 - `fix(citrix): correct non-functional createResponderpolicyLbvserverBinding reference`
 - `docs: clarify required Tools section columns in format spec`
 
@@ -103,9 +106,9 @@ Examples:
 
 ### Before Submitting
 
-- [ ] Every operation name you're adding or changing in a `SKILL.md` Tools section is traceable to a real, cited source — not hand-authored from memory
+- [ ] Every operation name you're adding or changing in a skill's Tools section is traceable to a real, cited source — not hand-authored from memory
 - [ ] `registry.json` reflects the actual current state of `vendors/`
-- [ ] `README.md` and `SKILL.md` follow the required sections in the format spec
+- [ ] `README.md` (vendor level) and `SKILL.md` (skill level) follow the required sections in the format spec
 - [ ] Signed the CLA (see above)
 
 ### Pull Request Description
@@ -123,19 +126,19 @@ This repo has no build step, but there is a real bar to check against before ope
 # registry.json must be valid JSON
 python3 -c "import json; json.load(open('registry.json'))"
 
-# Every vendor in registry.json must have a matching README.md and SKILL.md on disk
+# Every skill in registry.json must have a matching SKILL.md on disk, and every vendor a README.md
 python3 -c "
-import json
+import json, os
 reg = json.load(open('registry.json'))
-import os
 for v in reg['vendors']:
-    for f in (v['readme'], v['skillDoc']):
-        assert os.path.exists(f), f'missing {f}'
+    assert os.path.exists(v['readme']), f\"missing {v['readme']}\"
+    for s in v['skills']:
+        assert os.path.exists(s['path']), f\"missing {s['path']}\"
 print('ok')
 "
 ```
 
-If you're adding a vendor package, re-read `docs/AGENT-FORMAT-SPEC.md`'s "Anti-patterns" section and check your package against each item — most rejected PRs will be rejected for one of those, not for anything novel.
+If you're adding a vendor package or skill, re-read `docs/AGENT-FORMAT-SPEC.md`'s "Anti-patterns" section and check your package against each item — most rejected PRs will be rejected for one of those, not for anything novel.
 
 ## Getting Help
 
@@ -145,7 +148,7 @@ If you're adding a vendor package, re-read `docs/AGENT-FORMAT-SPEC.md`'s "Anti-p
 
 ### Reporting Issues
 
-Include: a clear description, which vendor package/file is affected, expected vs. actual, and (if it's a wrong operation name or description) how you confirmed the correct one.
+Include: a clear description, which vendor/skill file is affected, expected vs. actual, and (if it's a wrong operation name or description) how you confirmed the correct one.
 
 ## Recognition
 
