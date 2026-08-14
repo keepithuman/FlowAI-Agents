@@ -1,8 +1,8 @@
-# Network and Infrastructure Agents — Vendor Package Format Spec
+# Network and Infrastructure Skills — Vendor Package Format Spec
 
 This document defines the format every vendor package in this marketplace must follow. Vendor content lives in `vendors/<slug>/`; this spec defines the *shape* that content must take.
 
-This is a **pure skill library** — vendor-neutral, platform-neutral operational knowledge, meant to be loaded into a skill registry and called by whatever agent framework a consumer already uses. It does not prescribe agent architecture, tool-count ceilings, or approval-mechanism implementation details for any specific platform. Those are downstream decisions for whoever builds an agent on top of a skill — not something this repository bakes in.
+This is a **pure skill library** — vendor-neutral, platform-neutral operational knowledge, meant to be loaded into a skill registry and called by whatever framework a consumer already uses. It does not prescribe orchestration architecture, tool-count ceilings, or approval-mechanism implementation details for any specific platform. Those are downstream decisions for whoever builds automation on top of a skill — not something this repository bakes in.
 
 The format reuses a convention that already has independent industry traction:
 
@@ -12,7 +12,7 @@ Skills should be legible to any tool that already understands Claude Skills, wit
 
 ## Directory shape
 
-A vendor is a collection of individual, single-domain skills — not one monolithic document per vendor. Each skill maps to one functional domain someone would actually reach for on its own (e.g. "load balancing," "VM encryption," "DNS services") — think of it as the same granularity as a single-purpose agent scoped to one job, minus any agent-framework specifics.
+A vendor is a collection of individual, single-domain skills — not one monolithic document per vendor. Each skill maps to one functional domain someone would actually reach for on its own (e.g. "load balancing," "VM encryption," "DNS services") — think of it as the same granularity as a single-purpose tool scoped to one job, minus any framework-specific packaging.
 
 ```
 vendors/<vendor-slug>/
@@ -45,7 +45,7 @@ description: <one line, specific enough to disambiguate this skill from others i
 ---
 ```
 
-**Core principle: `SKILL.md` teaches one domain's procedure AND is that domain's exhaustive tool lookup — in one file.** Someone — or something — should be able to load just this one skill and correctly perform the operation on the real product, on any orchestration platform, with zero foreign-platform-specific knowledge required, and then find the exact real operation name for any step without leaving the document. It is not an agent-design document: it does not say how many tools to hand an LLM at once, does not name a specific approval-UI mechanism, and does not describe "agents" as objects. That's for whoever builds on top of this skill to decide, in their own framework, using their own judgment.
+**Core principle: `SKILL.md` teaches one domain's procedure AND is that domain's exhaustive tool lookup — in one file.** Someone — or something — should be able to load just this one skill and correctly perform the operation on the real product, on any orchestration platform, with zero foreign-platform-specific knowledge required, and then find the exact real operation name for any step without leaving the document. It is not an orchestration-design document: it does not say how many tools to hand an LLM at once, does not name a specific approval-UI mechanism, and does not prescribe any particular calling-software's object model. That's for whoever builds on top of this skill to decide, in their own framework, using their own judgment.
 
 Required body sections, in this order:
 
@@ -72,7 +72,7 @@ Every vendor package, and every skill within it, must have a corresponding entry
 
 ## Anti-patterns (things a contribution will be rejected for)
 
-- **Baking agent architecture into a skill.** No prescribing tool-count ceilings for a specific agent, no naming a specific approval-UI mechanism as *the* way to gate a write, no describing "agents" as objects this package defines. That's for whoever consumes the skill to decide.
+- **Baking orchestration architecture into a skill.** No prescribing tool-count ceilings for a specific caller, no naming a specific approval-UI mechanism as *the* way to gate a write, no describing any calling-software object model this package defines. That's for whoever consumes the skill to decide.
 - **A Tools row for an operation that wasn't confirmed in the vendor's own real documentation.** A reference table with invented rows is worse than no reference table — it looks authoritative and isn't.
 - **No machine-readable index.** A marketplace that's only human-browsable markdown isn't discoverable by anything except a human with time to read every folder.
 - **One monolithic `SKILL.md` covering every domain of a broad vendor.** Split by domain — the whole point of per-skill files is that a consumer loads only what a specific task needs, not an entire vendor's worth of context.

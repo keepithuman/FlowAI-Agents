@@ -1,6 +1,6 @@
 {
   "$schemaVersion": 3,
-  "description": "Machine-readable index of every vendor and skill in the Network and Infrastructure Agents marketplace. See docs/AGENT-FORMAT-SPEC.md for the format this must conform to when adding a vendor or skill. Schema v3 splits each vendor into individual, single-domain skills (one SKILL.md per functional domain, each self-contained with procedure + tool reference) instead of one monolithic SKILL.md per vendor (v2) or an agent/project structure (v1). No dependency on any specific automation platform.",
+  "description": "Machine-readable index of every vendor and skill in the Network and Infrastructure Skills marketplace. See docs/SKILL-FORMAT-SPEC.md for the format this must conform to when adding a vendor or skill. Schema v3 splits each vendor into individual, single-domain skills (one SKILL.md per functional domain, each self-contained with procedure + tool reference) instead of one monolithic SKILL.md per vendor (v2) or a platform-specific orchestration/project structure (v1). No dependency on any specific automation platform.",
   "vendors": [
     {
       "slug": "citrix",

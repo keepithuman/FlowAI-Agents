@@ -1,6 +1,6 @@
-# Contributing to Network and Infrastructure Agents
+# Contributing to Network and Infrastructure Skills
 
-Thank you for your interest in contributing to Network and Infrastructure Agents! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every skill must clear.
+Thank you for your interest in contributing to Network and Infrastructure Skills! This document covers both the general mechanics of contributing (branches, commits, PRs — mirroring common open-source practice) and the project-specific bar every skill must clear.
 
 ## Table of Contents
 
@@ -27,17 +27,17 @@ By participating in this project, you are expected to uphold the [Code of Conduc
 - A **new skill** within an existing vendor (`vendors/<slug>/<new-skill-slug>/SKILL.md`) — a functional domain that vendor's package doesn't cover yet.
 - A **new vendor package** (`vendors/<slug>/`, one or more skill folders inside it) — see the checklist below.
 - A **refinement to an existing skill's operational procedure or tool reference** — a missing step, a caveat woven into the wrong place, a clearer explanation of a decision point, a missing or incorrectly-described operation — these are valuable on their own.
-- Improvements to [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) itself, if you find the format spec is missing something a real skill needed.
+- Improvements to [`docs/SKILL-FORMAT-SPEC.md`](./docs/SKILL-FORMAT-SPEC.md) itself, if you find the format spec is missing something a real skill needed.
 
 ## Skill Submission Checklist
 
-Full detail lives in [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) — this is the short version to check against before opening a PR:
+Full detail lives in [`docs/SKILL-FORMAT-SPEC.md`](./docs/SKILL-FORMAT-SPEC.md) — this is the short version to check against before opening a PR:
 
 - [ ] **Every operation named in the skill's `SKILL.md` is real and confirmed against the vendor's own documentation.** Never invent or paraphrase an operation name — cite the exact OpenAPI spec, API doc, or CLI reference in the vendor's `README.md`'s Source section.
 - [ ] Vendor directory is `vendors/<vendor-slug>/`, skill directory is `vendors/<vendor-slug>/<skill-slug>/` — both lowercase-kebab-case.
 - [ ] The skill maps to one functional domain, not a bundle of unrelated domains crammed together to avoid adding another folder.
 - [ ] `SKILL.md` has the required sections from the format spec, and the vendor's `README.md` lists the new skill.
-- [ ] `SKILL.md` does not bake in agent architecture — no tool-count ceilings, no named approval-UI mechanism, no "agents" as objects this package defines. That's a downstream decision for whoever consumes the skill.
+- [ ] `SKILL.md` does not bake in orchestration architecture — no tool-count ceilings, no named approval-UI mechanism, no calling-software object model this package defines. That's a downstream decision for whoever consumes the skill.
 - [ ] No offensive, destructive, or evasive capability anywhere in the package.
 - [ ] `registry.json` updated with the new/changed skill entry, matching the actual contents of `vendors/<slug>/`.
 - [ ] Caveats in the procedure are real and woven into the relevant step — not quarantined in a separate list, and not hypothetical.
@@ -138,11 +138,11 @@ print('ok')
 "
 ```
 
-If you're adding a vendor package or skill, re-read `docs/AGENT-FORMAT-SPEC.md`'s "Anti-patterns" section and check your package against each item — most rejected PRs will be rejected for one of those, not for anything novel.
+If you're adding a vendor package or skill, re-read `docs/SKILL-FORMAT-SPEC.md`'s "Anti-patterns" section and check your package against each item — most rejected PRs will be rejected for one of those, not for anything novel.
 
 ## Getting Help
 
-- **Documentation**: Start with the top-level [`README.md`](./README.md) and [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md)
+- **Documentation**: Start with the top-level [`README.md`](./README.md) and [`docs/SKILL-FORMAT-SPEC.md`](./docs/SKILL-FORMAT-SPEC.md)
 - **Discussions**: Use GitHub Discussions for questions
 - **Maintainer**: [@keepithuman](https://github.com/keepithuman)
 
@@ -154,4 +154,4 @@ Include: a clear description, which vendor/skill file is affected, expected vs. 
 
 Contributors who have PRs merged will be listed in the project's contributors and credited in the relevant vendor package's README where appropriate.
 
-Thank you for contributing to Network and Infrastructure Agents!
+Thank you for contributing to Network and Infrastructure Skills!
