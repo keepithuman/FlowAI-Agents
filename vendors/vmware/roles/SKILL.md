@@ -29,7 +29,7 @@ description: How to create and manage VMware vSphere roles — named privilege s
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Authorization.Roles_list` | List roles (named privilege sets) | RBAC |
 | `Vcenter.Authorization.Roles_create` | Create a new role | RBAC |

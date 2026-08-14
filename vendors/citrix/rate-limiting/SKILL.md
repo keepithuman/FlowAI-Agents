@@ -32,7 +32,7 @@ description: How to configure NetScaler rate limiting — selectors and limit id
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `listNslimitidentifier` | List rate-limit identifiers (the threshold/time-window definitions) | Rate Limiting |
 | `createNslimitidentifier` | Create a new rate-limit identifier | Rate Limiting |

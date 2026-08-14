@@ -27,7 +27,7 @@ description: How to check VMware vSphere datastore free/used capacity before an 
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Datastore_list` | List datastores | Datastore |
 | `Vcenter.Datastore_get` | Get a single datastore's details, including free/used capacity | Datastore |

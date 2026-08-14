@@ -30,7 +30,7 @@ description: How to use VMware vSphere's draft/apply model for cluster desired-s
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Esx.Settings.Clusters.Configuration_get` | Get a cluster's current desired-state configuration | Cluster Configuration |
 | `Esx.Settings.Clusters.Configuration_checkCompliance$Task` | Check whether a cluster's actual configuration matches its declared desired state | Cluster Configuration |

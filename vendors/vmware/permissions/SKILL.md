@@ -30,7 +30,7 @@ description: How to assign and remove VMware vSphere permissions — role assign
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Authorization.Permissions_list` | List permissions (role assignments on specific objects) | RBAC |
 | `Vcenter.Authorization.Permissions_create` | Assign a role to a principal on a specific object | RBAC |

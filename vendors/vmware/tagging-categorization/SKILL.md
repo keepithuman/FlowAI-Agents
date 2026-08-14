@@ -30,7 +30,7 @@ description: How to create and manage VMware vSphere tag categories and tags for
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Cis.Tagging.Category_list` | List tag categories (the type of tag, and what object types it applies to) | Tagging |
 | `Cis.Tagging.Category_create` | Create a new tag category | Tagging |

@@ -29,7 +29,7 @@ description: How to manage NetScaler DNS forward records (A/CNAME), including th
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `listDnsaddrec` | List DNS A (address) records | DNS Forward Records |
 | `createDnsaddrec` | Create a new A record | DNS Forward Records |

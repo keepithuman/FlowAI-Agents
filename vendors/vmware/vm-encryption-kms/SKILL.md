@@ -29,7 +29,7 @@ description: How to configure and manage VMware vSphere Key Management Server (K
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.CryptoManager.Kms.Providers_list` | List configured Key Management Server (KMS) providers | VM Encryption |
 | `Vcenter.CryptoManager.Kms.Providers_get` | Get a single KMS provider's configuration | VM Encryption |

@@ -32,7 +32,7 @@ description: How to renew or replace vCenter's own TLS certificate. Vendor-neutr
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.CertificateManagement.Vcenter.Tls_get` | Get vCenter's current TLS certificate details | Certificate Management |
 | `Vcenter.CertificateManagement.Vcenter.Tls_renew` | Renew vCenter's TLS certificate | Certificate Management |

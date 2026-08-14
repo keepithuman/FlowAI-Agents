@@ -30,7 +30,7 @@ description: How to manage VMware vSphere datacenters — the top-level inventor
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Datacenter_list` | List datacenters (top-level inventory containers) | Datacenter |
 | `Vcenter.Datacenter_create` | Create a new datacenter | Datacenter |

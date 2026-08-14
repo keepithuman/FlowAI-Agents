@@ -32,7 +32,7 @@ description: How to configure NetScaler IP addresses and VLANs, including the di
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `listNsip` | List IP addresses configured on the appliance | IP & VLAN |
 | `createNsip` | Add a new IP address | IP & VLAN |

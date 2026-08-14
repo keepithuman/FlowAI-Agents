@@ -58,7 +58,7 @@ Required body sections, in this order:
    | Column | What goes in it |
    |---|---|
    | **Operation** | The real, actual name of the operation — an OpenAPI `operationId`, a documented REST endpoint (method + path), a real CLI command, or whatever the vendor's own documentation calls it. Never invented, never paraphrased. |
-   | **Plain-English description** | What it actually does, in a sentence a non-specialist could follow. This is the "translate the vendor's jargon into English" value-add — don't just restate the operation name in title case. |
+   | **Description** | What it actually does, in a sentence a non-specialist could follow. This is the "translate the vendor's jargon into English" value-add — don't just restate the operation name in title case. |
    | **Category** | Which sub-area within this domain this belongs to. |
 
    Add a **Method / Path** or **CLI syntax** column when the vendor's API is REST or CLI-shaped and that detail is genuinely useful at a glance; omit it if the operation name alone is unambiguous.

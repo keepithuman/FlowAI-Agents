@@ -28,7 +28,7 @@ description: How to manage VMware vSphere content libraries, including the local
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Content.Library_list` | List content libraries (local and subscribed) | Content Library |
 | `Content.Library_get` | Get a single content library's details | Content Library |

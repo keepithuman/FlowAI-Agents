@@ -31,7 +31,7 @@ description: How to build NetScaler datasets, pattern sets, and string maps refe
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `listPolicydataset` | List datasets (typed value collections referenced by policy expressions) | Policy Building Blocks |
 | `createPolicydataset` | Create a new dataset | Policy Building Blocks |

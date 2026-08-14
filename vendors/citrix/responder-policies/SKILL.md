@@ -32,7 +32,7 @@ description: How to configure NetScaler responder policies to redirect, block, o
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `createResponderaction` | Create a responder action (what to actually do: redirect, respond-with, drop) | Responder |
 | `updateResponderaction` | Change an existing responder action | Responder |

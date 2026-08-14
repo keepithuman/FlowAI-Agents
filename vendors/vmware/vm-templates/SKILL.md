@@ -29,7 +29,7 @@ description: How to capture a VMware vSphere VM as a template and deploy new VMs
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.VmTemplate.LibraryItems_create` | Capture a VM as a template library item (freezes current disk state as the base image) | VM Templates |
 | `Vcenter.VmTemplate.LibraryItems_deploy` | Deploy a new VM from a template library item | VM Templates |

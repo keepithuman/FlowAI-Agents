@@ -29,7 +29,7 @@ description: How to check VMware vCenter High Availability (VCHA) status and app
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Vcha.Cluster_get` | Get vCenter High Availability (VCHA) cluster configuration | VCHA Status |
 | `Vcenter.Vcha.Cluster.Active_get` | Get the currently active (primary) VCHA node | VCHA Status |

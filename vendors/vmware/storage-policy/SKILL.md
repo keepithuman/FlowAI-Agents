@@ -30,7 +30,7 @@ description: How to check VMware vSphere SPBM storage-policy compliance and comp
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Datastore.DefaultPolicy_get` | Get a datastore's default storage policy | Storage Policy |
 | `Vcenter.Storage.Policies_list` | List SPBM storage policies | Storage Policy |

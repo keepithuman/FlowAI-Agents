@@ -28,7 +28,7 @@ description: How to manage which certificate authorities vCenter trusts for its 
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.CertificateManagement.Vcenter.TrustedRootChains_list` | List trusted root certificate chains | Certificate Management |
 | `Vcenter.CertificateManagement.Vcenter.TrustedRootChains_create` | Add a new trusted root chain | Certificate Management |

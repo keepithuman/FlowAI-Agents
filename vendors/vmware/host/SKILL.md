@@ -31,7 +31,7 @@ description: How to connect, disconnect, and list VMware vSphere ESXi hosts, and
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.Host_list` | List ESXi hosts | Host |
 | `Vcenter.Host_connect` | Connect a host to vCenter's management | Host |

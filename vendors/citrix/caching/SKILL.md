@@ -31,7 +31,7 @@ description: How to configure NetScaler integrated caching policies, including t
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `listCachepolicy` | List integrated-caching policies | Caching |
 | `createCachepolicy` | Create a new caching policy | Caching |

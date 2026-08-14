@@ -31,7 +31,7 @@ description: How to configure VMware vSphere performance-metric acquisition spec
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vstats.AcqSpecs_list` | List metric-acquisition specs (what's being collected and how often) | Performance Metrics |
 | `Vstats.AcqSpecs_create` | Create a new acquisition spec | Performance Metrics |

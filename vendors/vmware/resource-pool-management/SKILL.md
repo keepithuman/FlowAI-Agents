@@ -30,7 +30,7 @@ description: How to create, resize, and delete VMware vSphere resource pools, in
 
 Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `Vcenter.ResourcePool_list` | List resource pools | Resource Pool |
 | `Vcenter.ResourcePool_get` | Get a single resource pool's configuration | Resource Pool |

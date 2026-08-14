@@ -33,7 +33,7 @@ This is inherently read-only, but the *order* of what to check matters:
 
 Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
 
-| Operation | Plain-English description | Category |
+| Operation | Description | Category |
 |---|---|---|
 | `getNsversionByName` | Get the NetScaler appliance's firmware version | Appliance Health |
 | `getHanodeByName` | Get a single HA node's status | HA Status |
