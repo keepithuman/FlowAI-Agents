@@ -12,7 +12,10 @@ description: How to assign and remove VMware vSphere permissions — role assign
 
 ## Operational procedure
 
-A permission is the actual assignment of a role to a specific principal on a specific object, with an inheritable flag. Permissions are typically inheritable down the inventory hierarchy by default — a permission granted at the datacenter level usually applies to everything inside it unless explicitly set non-propagating. Granting broad access "for convenience" at a high level is a common way to over-grant without realizing it.
+1. Confirm the role already exists (see the `roles` skill).
+2. Decide the inheritance scope deliberately — inheritable/propagating or not. Permissions are typically inheritable down the inventory hierarchy by default, so a permission granted at the datacenter level usually applies to everything inside it unless explicitly set non-propagating; granting broad access "for convenience" at a high level is a common way to over-grant without realizing it.
+3. Assign the role to a principal on a specific object.
+4. Confirm who actually gains access, including via inheritance — not just that the API call succeeded.
 
 ## Patterns
 

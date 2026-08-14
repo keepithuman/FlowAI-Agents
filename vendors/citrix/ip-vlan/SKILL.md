@@ -12,7 +12,11 @@ description: How to configure NetScaler IP addresses and VLANs, including the di
 
 ## Operational procedure
 
-NetScaler distinguishes IP types (management, VIP, subnet-mapping) that behave differently — assign the correct *type* for the purpose, not just any free address. Create the VLAN before binding interfaces or IPs to it.
+1. Decide the correct IP type for the purpose — management, VIP, or subnet-mapping. They behave differently; assign the correct type, not just any free address.
+2. Create the VLAN before binding interfaces or IPs to it.
+3. Add the IP address.
+4. Bind the interface and/or IP address to the VLAN.
+5. Confirm via list that the binding is actually associated with the intended VLAN.
 
 ## Patterns
 

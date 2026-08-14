@@ -11,7 +11,9 @@ description: How to check VMware vSphere datastore free/used capacity before an 
 
 ## Operational procedure
 
-Datastore free space is the single most important number before proposing anything that consumes storage elsewhere — always re-check it fresh, don't reuse a number from earlier in the same conversation, since other activity on a shared datastore can change it in the meantime.
+1. Identify the target datastore.
+2. Query its current free/used capacity — fresh, not reused from earlier in the conversation, since other activity on a shared datastore can change it in the meantime.
+3. Confirm the free space is actually sufficient for the operation about to consume it (a new VM, a resized disk, a new content library item).
 
 ## Patterns
 

@@ -12,7 +12,11 @@ description: How to configure NetScaler AppFlow analytics export — actions, po
 
 ## Operational procedure
 
-Verify the collector's own network reachability (it's a real UDP/TCP export target) before wiring an action/policy to it. A policy bound to an unreachable collector drops analytics silently — there's no application-visible error when this happens, so it's easy to believe analytics are flowing when they aren't.
+1. Create the AppFlow collector first — the real network target analytics get sent to.
+2. Verify the collector's own network reachability before wiring anything to it.
+3. Create the AppFlow action (what to export and where).
+4. Create the AppFlow policy.
+5. Bind the policy. A policy bound to an unreachable collector drops analytics silently — there's no application-visible error, so confirm data is actually arriving at the collector after binding, not just that the NetScaler-side config succeeded.
 
 ## Patterns
 

@@ -12,9 +12,11 @@ description: How to configure NetScaler responder policies to redirect, block, o
 
 ## Operational procedure
 
-Decide the bind point deliberately — global, a specific CS vserver, or a specific LB vserver — because the practical effect of the same policy changes entirely depending on where it's bound. A globally-bound responder policy affects all traffic through the appliance, not just one application. Build the action (what to actually do) before the policy (the match expression), and the policy before any binding.
-
-When binding a responder policy to an LB vserver specifically, bind from the vserver's side (the vserver-owned resource) — the API also exposes the same relationship from the policy's side, but only the vserver-owned direction has a real command behind it on the appliance; the other passes validation and fails at runtime. Confirm which direction actually works with a minimal test bind before relying on it in automation.
+1. Decide the bind point deliberately — global, a specific CS vserver, or a specific LB vserver. The practical effect of the same policy changes entirely depending on where it's bound; a globally-bound policy affects all traffic through the appliance, not just one application.
+2. Build the responder action first — what to actually do (redirect, respond-with, drop).
+3. Build the responder policy next — the match expression that triggers the action.
+4. Bind the policy to the chosen scope. When binding to an LB vserver specifically, bind from the vserver's side (the vserver-owned resource) — the API also exposes the same relationship from the policy's side, but only the vserver-owned direction has a real command behind it on the appliance; the other passes validation and fails at runtime.
+5. Confirm which direction actually works with a minimal test bind before relying on it in automation.
 
 ## Patterns
 

@@ -12,7 +12,9 @@ description: How to manage VMware vSphere content libraries, including the local
 
 ## Operational procedure
 
-A content library is either local (owned and directly editable) or subscribed (a read-only mirror of someone else's library, kept in sync automatically). Never edit an item in a subscribed library directly — it'll fail or get silently overwritten on the next sync; edit the source library instead.
+1. Determine whether the target library is local (owned and directly editable) or subscribed (a read-only mirror of someone else's library, kept in sync automatically).
+2. For a local library, create/update/delete as needed.
+3. For a subscribed library, never edit an item directly — it'll fail or get silently overwritten on the next sync; edit the source library instead.
 
 ## Patterns
 

@@ -12,7 +12,11 @@ description: How to configure NetScaler Web Application Firewall (AppFirewall) p
 
 ## Operational procedure
 
-Create the profile (the actual ruleset/relaxations) before the policy (the match expression selecting which traffic the profile applies to). A profile with no policy bound to any vserver protects nothing. Start a new profile in log-only/non-blocking mode and run it against real traffic before switching to blocking — this is the only reliable way to catch false positives before they turn into a real outage for real users.
+1. Create the profile first — the actual ruleset/relaxations.
+2. Create the policy — the match expression selecting which traffic the profile applies to.
+3. Bind the policy to the target vserver in log-only/non-blocking mode. A profile with no policy bound to any vserver protects nothing.
+4. Run it against real traffic and watch for false positives — this is the only reliable way to catch them before they turn into a real outage.
+5. Switch to blocking mode only after that observation window.
 
 ## Patterns
 

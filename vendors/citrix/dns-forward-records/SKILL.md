@@ -12,7 +12,9 @@ description: How to manage NetScaler DNS forward records (A/CNAME), including th
 
 ## Operational procedure
 
-Confirm the authoritative zone/SOA already exists and is correctly configured before adding records into it. A record added into a misconfigured or non-existent zone creates successfully but silently never resolves for anyone querying it externally.
+1. Confirm the authoritative zone/SOA already exists and is correctly configured.
+2. Create or update the A/CNAME record inside that zone.
+3. Confirm the record actually resolves via a real external query — a record added into a misconfigured or non-existent zone creates successfully but silently never resolves for anyone querying it externally.
 
 ## Patterns
 

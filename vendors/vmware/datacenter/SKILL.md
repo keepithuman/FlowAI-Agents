@@ -12,7 +12,10 @@ description: How to manage VMware vSphere datacenters — the top-level inventor
 
 ## Operational procedure
 
-Datacenters are the top-level organizational container — everything else (clusters, hosts, VMs, networks) lives inside one. Deleting a datacenter cascades to everything organized under it; there's no "delete but keep the contents" option.
+1. Confirm the intended scope before creating a datacenter — everything else (clusters, hosts, VMs, networks) will live inside it.
+2. Create the datacenter.
+3. Before deleting one, enumerate everything organized under it — deletion cascades to all of it, with no "delete but keep the contents" option.
+4. Delete only after that review.
 
 ## Patterns
 

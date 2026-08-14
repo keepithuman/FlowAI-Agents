@@ -12,7 +12,10 @@ description: How to take and review NetScaler configuration backups, and when to
 
 ## Operational procedure
 
-Take a backup *immediately before* any RBAC or feature change, not after. A broken RBAC or feature change can itself lock out the access needed to restore from a backup taken too late to help.
+1. Identify the risky change about to happen — an RBAC or feature/licensing change.
+2. Trigger a configuration backup *immediately before* that change, not after.
+3. Confirm the backup exists and is retrievable (`getSystembackupByName`) before proceeding — a broken RBAC or feature change can itself lock out the access needed to restore from a backup taken too late to help.
+4. Proceed with the risky change.
 
 ## Patterns
 

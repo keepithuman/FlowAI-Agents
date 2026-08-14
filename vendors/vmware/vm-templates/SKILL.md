@@ -12,9 +12,10 @@ description: How to capture a VMware vSphere VM as a template and deploy new VMs
 
 ## Operational procedure
 
-Capturing a VM as a template freezes its current disk state as the template's base image — if the source VM keeps running and changing after capture, the template does not reflect those later changes.
-
-Deploying from a template creates a new VM from that frozen image — always confirm placement (folder, resource pool, datastore, network) explicitly rather than accepting whatever defaults the template happened to specify, since a template captured in one environment can carry placement defaults that don't exist in another.
+1. Confirm the source VM's disk state reflects what you actually want captured.
+2. Capture the VM as a template library item — this freezes the current disk state as the base image; the template won't reflect later changes to the source VM.
+3. For deployment, explicitly confirm placement (folder, resource pool, datastore, network) rather than accepting whatever defaults the template happened to specify — a template captured in one environment can carry placement defaults that don't exist in another.
+4. Deploy the new VM from the template.
 
 ## Patterns
 

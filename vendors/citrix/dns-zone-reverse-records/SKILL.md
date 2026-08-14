@@ -12,7 +12,10 @@ description: How to manage NetScaler DNS zone authority (NS/SOA) and reverse-loo
 
 ## Operational procedure
 
-A PTR record must be added into the zone that actually corresponds to the IP (the correct `in-addr.arpa` or `ip6.arpa` zone) — a PTR record that "creates successfully" in the wrong zone will never be found by a real reverse lookup, and there's no error at creation time to signal the mismatch.
+1. Confirm or create the NS/SOA records establishing the zone's authority.
+2. Identify the specific `in-addr.arpa`/`ip6.arpa` zone that actually corresponds to the IP.
+3. Create the PTR record inside that specific zone — a PTR record created in the wrong zone "creates successfully" but will never be found by a real reverse lookup, with no error at creation time to signal the mismatch.
+4. Confirm the PTR record resolves via a real reverse lookup.
 
 ## Patterns
 

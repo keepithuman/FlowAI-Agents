@@ -12,7 +12,9 @@ description: How to look up VMware vSphere cluster and network/port-group invent
 
 ## Operational procedure
 
-This is inventory lookup only — cluster formation happens through host aggregation and networks are usually defined at the host/vSwitch layer, neither of which this REST surface exposes directly for mutation. Treat questions here as "what exists and where," not "create/modify this."
+1. Confirm the request is a lookup ("what exists"), not an expectation of mutation — cluster formation happens through host aggregation and networks are usually defined at the host/vSwitch layer, neither of which this REST surface exposes directly for mutation.
+2. List clusters or networks as needed.
+3. For a genuine configuration change (DRS/HA desired state, vSwitch/port-group), redirect to the `cluster-configuration-compliance` skill or the vendor's other management surface — this API doesn't expose those for mutation.
 
 ## Patterns
 

@@ -12,7 +12,10 @@ description: How to configure NetScaler spillover (overflow) policies to protect
 
 ## Operational procedure
 
-Set the overflow threshold meaningfully below the backend's actual saturation point, not at it. Spillover configured to trigger only once the primary is already failing defeats the purpose of having it.
+1. Determine the backend's actual saturation point.
+2. Set the overflow threshold meaningfully below that point, not at it — spillover configured to trigger only once the primary is already failing defeats the purpose of having it.
+3. Create the spillover policy and bind it to the LB vserver.
+4. Test spillover behavior under simulated load before relying on it in production.
 
 ## Patterns
 

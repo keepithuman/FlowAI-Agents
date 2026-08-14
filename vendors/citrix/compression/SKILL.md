@@ -12,7 +12,10 @@ description: How to configure NetScaler compression policies, including the CPU-
 
 ## Operational procedure
 
-Validate the CPU-for-bandwidth tradeoff on the actual appliance tier in use. Compression is real CPU cost traded for bandwidth savings, and lower-tier or virtual appliances can bottleneck on CPU before the bandwidth savings materialize — measure, don't assume the tradeoff is free.
+1. Identify the actual appliance tier in use.
+2. Create the compression policy.
+3. Bind it to the LB vserver.
+4. Measure the CPU-for-bandwidth tradeoff on that specific appliance tier — lower-tier or virtual appliances can bottleneck on CPU before the bandwidth savings materialize; don't assume the tradeoff is free.
 
 ## Patterns
 

@@ -12,7 +12,11 @@ description: How to route NetScaler traffic by URL/host to different backends us
 
 ## Operational procedure
 
-Create the CS vserver first — it's the entry point everything else attaches to. Then create CS actions (each names a target LB vserver or content group) and CS policies (the match expression), then bind policies to the CS vserver with an explicit priority. Lower priority numbers evaluate first; get this ordering wrong and a broad catch-all rule can silently shadow a more specific one that never fires.
+1. Create the CS vserver first — it's the entry point everything else attaches to.
+2. Create a CS action naming the target LB vserver or content group a policy should route to.
+3. Create the CS policy — the match expression (e.g. "if URL starts with /api").
+4. Bind the policy to the CS vserver with an explicit priority. Lower priority numbers evaluate first — get this ordering wrong and a broad catch-all rule can silently shadow a more specific one that never fires.
+5. List the full set of bindings back and confirm the priority order matches intent.
 
 ## Patterns
 

@@ -12,11 +12,10 @@ description: How to create, resize, and delete VMware vSphere resource pools, in
 
 ## Operational procedure
 
-A resource pool's shares/reservations/limits only matter during genuine contention for the underlying host/cluster resources — on an underutilized cluster, a tightly-configured pool and a loosely-configured one behave identically. The real test of a pool's settings is what happens during actual contention, not whether anything looks wrong today.
-
-Deleting a resource pool doesn't delete the VMs inside it — they get reparented to the pool's parent. Confirm what the parent actually is, and whether its settings suit those VMs, before deleting.
-
-Nested resource pools inherit constraints from their parent — a child's limit can never effectively exceed what its parent allows, regardless of what the child's own setting says.
+1. Identify the parent pool/cluster and its available resources — a nested pool's effective limit can never exceed what its parent allows, regardless of what the child's own setting says.
+2. Create or resize the pool with shares/reservations/limits.
+3. Validate settings against actual or simulated contention — on an underutilized cluster, a tightly-configured pool and a loosely-configured one behave identically; the real test is what happens during actual contention.
+4. Before deleting a pool, confirm the parent's suitability for the VMs that will be reparented into it — deleting a resource pool doesn't delete the VMs inside it, it reparents them.
 
 ## Patterns
 

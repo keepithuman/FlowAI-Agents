@@ -12,11 +12,11 @@ description: How to clone, relocate, and get console access to VMware vSphere VM
 
 ## Operational procedure
 
-Decide whether you need a full clone (independent copy, more storage, safe to power on immediately) or an instant clone (shares the parent's disk via a running-memory fork, near-instant, but the source VM must be running) — these solve different problems, and picking instant-clone for a VM you intend to keep long-term as an independent asset is the wrong tool.
-
-A relocate can move a VM's compute (to a different host/cluster), storage (to a different datastore), or both. Confirm the target host/cluster and datastore have the resources and network connectivity the VM needs before proposing a relocate — a VM relocated onto a host with no path to its required network segment ends up unreachable, not failed-loudly.
-
-A console ticket grants time-limited remote access to a VM's console — treat the ticket itself as a credential; don't log it or leave it somewhere it could be captured long after the session should have expired.
+1. Decide whether you need a full clone (independent copy, more storage, safe to power on immediately) or an instant clone (shares the parent's disk via a running-memory fork, near-instant, but the source VM must be running) — picking instant-clone for a VM you intend to keep long-term as an independent asset is the wrong tool.
+2. For a relocate, confirm the target host/cluster and datastore have the resources and network connectivity the VM needs.
+3. Execute the clone or relocate.
+4. Re-check the VM's state afterward — a VM relocated onto a host with no path to its required network segment ends up unreachable, not failed-loudly.
+5. For console access, generate a time-limited ticket and treat it as a credential — don't log it or leave it somewhere it could be captured long after the session should have expired.
 
 ## Patterns
 

@@ -12,7 +12,11 @@ description: How to configure NetScaler integrated caching policies, including t
 
 ## Operational procedure
 
-Verify a response is genuinely cacheable (correct cache-control headers, no session-specific or personalized content) before creating a cache policy for it. Caching a personalized or session-bound response is a data-leak risk between users, not just a wasted optimization.
+1. Verify the response is genuinely cacheable — correct cache-control headers, no session-specific or personalized content. Caching a personalized or session-bound response is a data-leak risk between users, not just a wasted optimization.
+2. Create a cache content group defining what's cacheable and for how long.
+3. Create the caching policy.
+4. Bind the policy to the LB vserver.
+5. Confirm via a real request that a second user doesn't receive the first user's cached, personalized response.
 
 ## Patterns
 

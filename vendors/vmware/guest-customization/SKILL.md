@@ -12,11 +12,10 @@ description: How to create and apply VMware vSphere guest OS customization specs
 
 ## Operational procedure
 
-A customization spec is applied *during* VM deployment (from a template or clone), not to an already-running VM — if a VM is already up, this isn't the tool to change its hostname or network config.
-
-Specs commonly reference identity-sensitive values (domain-join credentials, product keys) — treat spec content with the same care as any other credential material; don't echo it verbatim into a record anyone else can read.
-
-A spec that works for one guest OS version doesn't necessarily work for another — network adapter naming and sysprep/cloud-init syntax vary by OS family and version; verify against the actual guest OS being deployed.
+1. Confirm the target is a new deployment (from a template or clone), not an already-running VM — a customization spec is applied *during* deployment; if a VM is already up, this isn't the tool to change its hostname or network config.
+2. Create the customization spec (hostname, network config, domain join, etc.), verified against the actual guest OS family/version being deployed — network adapter naming and sysprep/cloud-init syntax vary by OS family and version.
+3. Handle any credentials/product keys in the spec with the same care as other secret material — don't echo them verbatim into a record anyone else can read.
+4. Apply the spec during deployment.
 
 ## Patterns
 

@@ -12,7 +12,9 @@ description: How to configure NetScaler inbound (INAT) and reverse (RNAT) NAT ru
 
 ## Operational procedure
 
-Inbound NAT (INAT) and reverse NAT (RNAT) solve different directional problems and are easy to conflate — decide the direction and scope deliberately, and test from the actual originating network segment, not just from the appliance's own local perspective.
+1. Decide the direction deliberately — inbound NAT (INAT) or reverse NAT (RNAT). They solve different directional problems and are easy to conflate.
+2. Create the rule with the correct direction and scope.
+3. Test from the actual originating network segment, not just from the appliance's own local perspective.
 
 ## Patterns
 

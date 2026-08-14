@@ -12,7 +12,9 @@ description: How to configure NetScaler TCP and HTTP performance-tuning profiles
 
 ## Operational procedure
 
-TCP and HTTP profiles are appliance-level (or vserver-bound) tuning objects — TCP profiles govern connection-level behavior (window sizing, congestion control, timeouts), HTTP profiles govern protocol-level behavior (header limits, keep-alive, HTTP version handling). Change one variable at a time and measure against real traffic; profile settings interact with the underlying network path in ways that are hard to predict from the setting names alone, and an overly aggressive change can degrade the exact metric it was meant to improve.
+1. Identify whether the tuning need is connection-level (TCP profile: window sizing, congestion control, timeouts) or protocol-level (HTTP profile: header limits, keep-alive, HTTP version handling).
+2. Change one setting at a time.
+3. Measure against real traffic before changing another setting — profile settings interact with the underlying network path in ways that are hard to predict from the setting names alone, and an overly aggressive change can degrade the exact metric it was meant to improve.
 
 ## Patterns
 

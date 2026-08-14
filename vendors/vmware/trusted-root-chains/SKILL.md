@@ -12,7 +12,9 @@ description: How to manage which certificate authorities vCenter trusts for its 
 
 ## Operational procedure
 
-Trusted root chains determine which external certificate authorities vCenter trusts for various integrations — removing a chain still actively relied on breaks whatever depended on that trust relationship, often invisibly until the next time that integration tries to connect.
+1. Before removing a trusted root chain, confirm no active integration still depends on it — the failure surfaces later, at the next connection attempt, not immediately.
+2. Add or remove the chain.
+3. Confirm the intended integration(s) are unaffected (or, if removing intentionally, that they actually lost trust as expected).
 
 ## Patterns
 

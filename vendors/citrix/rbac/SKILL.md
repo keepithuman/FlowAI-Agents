@@ -12,7 +12,11 @@ description: How to manage NetScaler admin RBAC — command policies, groups, us
 
 ## Operational procedure
 
-Create the command policy (the actual permission boundary — what's allowed/denied) before the group, the group before the user, then bind user-to-group and group-to-policy. A user created but never bound to a group/policy is left with the appliance's default access level, which may be broader or narrower than intended depending on the appliance's own default policy — don't assume "unbound" means "no access."
+1. Create the command policy first — the actual permission boundary (what's allowed/denied).
+2. Create the group.
+3. Create the user.
+4. Bind the user to the group, and the group to the policy. A user created but never bound to a group/policy is left with the appliance's default access level, which may be broader or narrower than intended — don't assume "unbound" means "no access."
+5. Confirm the user's actual effective access matches intent.
 
 ## Patterns
 

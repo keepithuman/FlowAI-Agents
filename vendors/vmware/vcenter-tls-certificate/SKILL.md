@@ -12,9 +12,11 @@ description: How to renew or replace vCenter's own TLS certificate. Vendor-neutr
 
 ## Operational procedure
 
-This is vCenter's *own* TLS identity (the certificate presented when connecting to vCenter itself) — not certificates on the VMs vCenter manages. Don't confuse a request about "a certificate on my web server VM" with this scope.
-
-Renewing vCenter's own certificate can briefly interrupt every client connection to vCenter (API clients, the web UI, other integrations) while the new cert takes effect — this is not a zero-downtime operation. Time it deliberately.
+1. Confirm the request is actually about vCenter's own TLS identity (the certificate presented when connecting to vCenter itself) — not a certificate on a VM vCenter manages.
+2. For a CSR-based renewal, generate the CSR and get it signed by the external CA.
+3. Renew or replace the certificate.
+4. Time the change deliberately — it briefly interrupts every client connection to vCenter (API clients, the web UI, other integrations) while the new cert takes effect; this is not a zero-downtime operation.
+5. Confirm a real client connection presents the new certificate afterward.
 
 ## Patterns
 

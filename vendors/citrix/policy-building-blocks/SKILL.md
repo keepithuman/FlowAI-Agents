@@ -12,7 +12,11 @@ description: How to build NetScaler datasets, pattern sets, and string maps refe
 
 ## Operational procedure
 
-Datasets, pattern sets, and string maps are referenced by policy expressions across content switching, responder, rewrite, and other policy types — create the building block before any policy that references it, since a policy expression referencing a not-yet-created dataset/patset/stringmap fails validation at policy-create time.
+1. Identify which policy types will reference this building block (content switching, responder, rewrite, WAF, etc.).
+2. Create the dataset, pattern set, or string map first.
+3. Add values, patterns, or key/value mappings into it.
+4. Only then create the policy that references it — a policy expression referencing a not-yet-created dataset/patset/stringmap fails validation at policy-create time.
+5. Confirm the referencing policy behaves correctly against an entry that's actually in the dataset/patset/stringmap.
 
 ## Patterns
 

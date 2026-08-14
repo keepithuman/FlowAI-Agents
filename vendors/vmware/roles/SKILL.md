@@ -12,9 +12,9 @@ description: How to create and manage VMware vSphere roles — named privilege s
 
 ## Operational procedure
 
-A role is a named set of privileges. Creating a role changes nothing by itself — nobody gains access until a permission assignment (see the `permissions` skill) references it.
-
-Before creating a new role, check whether an existing one already covers the need — proliferating near-duplicate roles makes the access model harder to audit later, which is its own security cost even when each individual role is scoped correctly.
+1. Check whether an existing role already covers the need — proliferating near-duplicate roles makes the access model harder to audit later, which is its own security cost even when each individual role is scoped correctly.
+2. If not, create the role — a named set of privileges.
+3. Remember that role creation alone changes nothing; nobody gains access until a permission assignment (see the `permissions` skill) references it.
 
 ## Patterns
 

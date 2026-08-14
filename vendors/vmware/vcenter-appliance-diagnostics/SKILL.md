@@ -13,9 +13,9 @@ description: How to check VMware vCenter High Availability (VCHA) status and app
 
 ## Operational procedure
 
-Read-only, but the order of checks matters: check VCHA's active-node status first (is there a healthy primary right now), then general appliance health (load, uptime), before concluding "vCenter itself is fine, the problem is elsewhere."
-
-Appliance uptime resets on any vCenter service restart, not just a full appliance reboot — a low uptime number doesn't necessarily mean the whole appliance just came up.
+1. Check VCHA's active-node status first — is there a healthy primary right now.
+2. Check general appliance health next (load, uptime). Remember uptime resets on any vCenter service restart, not just a full appliance reboot — a low uptime number doesn't necessarily mean the whole appliance just came up.
+3. Only conclude "vCenter itself is fine, the problem is elsewhere" after both of the above are checked.
 
 ## Patterns
 

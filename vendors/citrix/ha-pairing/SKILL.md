@@ -12,7 +12,10 @@ description: How to configure NetScaler active/passive HA node pairing, includin
 
 ## Operational procedure
 
-Verify the HA heartbeat has an independent network path before pairing two nodes. Pairing nodes whose heartbeat traverses the same single link as production traffic risks exactly the split-brain or simultaneous-failure scenario HA exists to prevent, under precisely the conditions (a link failure) HA is meant to survive.
+1. Verify the HA heartbeat has an independent network path, separate from production traffic — pairing nodes whose heartbeat traverses the same single link risks exactly the split-brain or simultaneous-failure scenario HA exists to prevent.
+2. Pair the two nodes.
+3. Confirm sync/failover state on both nodes, not just that the pairing call succeeded.
+4. Test a real failover in a maintenance window before trusting HA for an actual incident.
 
 ## Patterns
 

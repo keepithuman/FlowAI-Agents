@@ -12,7 +12,11 @@ description: How to configure NetScaler rate limiting — selectors and limit id
 
 ## Operational procedure
 
-Define what's actually being counted first — the selector (e.g., per source IP, per URL) — before the limit identifier (the threshold and time window). A selector scoped incorrectly (for example, counting per unique client behind a NAT gateway serving many real users as one IP) throttles far more or less traffic than intended; validate the selector's real-world grouping behavior before trusting the threshold.
+1. Define the selector first — what's actually being counted (e.g., per source IP, per URL).
+2. Validate the selector's real-world grouping behavior before trusting it — a selector scoped incorrectly (for example, counting per unique client behind a NAT gateway serving many real users as one IP) throttles far more or less traffic than intended.
+3. Create the limit identifier — the threshold and time window.
+4. Bind the identifier via an enforcing policy (see the `responder-policies`/`rewrite-policies`/`policy-building-blocks` skills) — a limit identifier alone doesn't throttle anything.
+5. Test the threshold against real traffic volume before relying on it in production.
 
 ## Patterns
 

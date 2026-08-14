@@ -12,11 +12,10 @@ description: How to configure and manage VMware vSphere Key Management Server (K
 
 ## Operational procedure
 
-A KMS provider is the external key server vCenter delegates encryption-key management to — vCenter doesn't generate or store the actual keys long-term, the KMS does. Removing a provider that's still backing live encrypted VMs can make their data permanently inaccessible if the keys aren't recoverable elsewhere.
-
-Before removing or replacing a KMS provider, confirm nothing currently depends on it — there's no automatic warning; the failure shows up later, when someone tries to access an encrypted VM and the key can't be retrieved.
-
-FIPS module status is relevant context for regulated environments — surface it alongside any KMS change proposed in a compliance-driven request, since the two are often evaluated together in an audit.
+1. Confirm the KMS provider's connection details before adding it — vCenter delegates key management to it and doesn't generate or store the actual keys long-term.
+2. Add the KMS provider.
+3. Before removing or replacing a provider, confirm nothing currently depends on it — there's no automatic warning; the failure shows up later, when someone tries to access an encrypted VM and the key can't be retrieved.
+4. Surface FIPS module status alongside any KMS change in a compliance-driven request, since the two are often evaluated together in an audit.
 
 ## Patterns
 

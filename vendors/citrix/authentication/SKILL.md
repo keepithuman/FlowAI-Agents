@@ -12,7 +12,11 @@ description: How to configure NetScaler LDAP/RADIUS authentication policies and 
 
 ## Operational procedure
 
-Create the action (the actual server connection: host, port, bind credentials, attribute mapping) before the policy (the expression selecting when it applies), before binding to an authentication or Gateway vserver. Test the raw LDAP/RADIUS connection independently — outside of any user-facing vserver — before wiring it into one; a misconfigured auth action bound directly to production blocks every real login attempt at once.
+1. Create the action first — the actual server connection (host, port, bind credentials, attribute mapping).
+2. Test the raw LDAP/RADIUS connection independently, outside of any user-facing vserver.
+3. Create the policy — the expression selecting when the action applies.
+4. Bind the policy to an authentication or Gateway vserver. Skipping step 2 is what turns a misconfigured auth action into an outage — bound directly to production, it blocks every real login attempt at once.
+5. Confirm a real login attempt succeeds after binding.
 
 ## Patterns
 

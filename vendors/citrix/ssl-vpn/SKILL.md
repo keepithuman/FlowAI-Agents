@@ -12,7 +12,11 @@ description: How to configure NetScaler Gateway (SSL VPN) for remote access — 
 
 ## Operational procedure
 
-Create the Gateway vserver, bind a trusted SSL certificate to it (remote users will not connect through an untrusted cert without a manual override), configure and bind the authentication policy so users can actually log in, then bind the intranet applications/resources users are allowed to reach. Access is deny-by-default — a Gateway vserver with no resources explicitly bound authenticates users into nothing.
+1. Create the Gateway vserver.
+2. Bind a trusted SSL certificate to it — remote users will not connect through an untrusted cert without a manual override.
+3. Configure and bind the authentication policy so users can actually log in.
+4. Bind the intranet applications/resources users are allowed to reach. Access is deny-by-default — a Gateway vserver with no resources explicitly bound authenticates users into nothing.
+5. Test a real login and confirm at least one resource is reachable.
 
 ## Patterns
 

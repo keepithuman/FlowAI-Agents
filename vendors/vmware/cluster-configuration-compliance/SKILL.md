@@ -12,11 +12,10 @@ description: How to use VMware vSphere's draft/apply model for cluster desired-s
 
 ## Operational procedure
 
-The draft → apply model is deliberate: a draft captures a proposed desired-state configuration without touching the live cluster, and only `apply` actually pushes it. Always create and review a draft before ever applying, even for a change that seems obviously safe.
-
-A compliance check reports drift between actual and declared configuration — it's a detection tool, not a remediation tool. Finding non-compliance doesn't fix it; you still have to decide whether to apply a corrected draft or accept the drift.
-
-Applying a cluster configuration change affects every host and VM in that cluster simultaneously (DRS/HA behavior is cluster-wide by definition) — there's no way to stage this to "just one host first."
+1. Create a draft of the proposed desired-state configuration — this captures the change without touching the live cluster.
+2. Review the draft's contents against what was actually approved, even for a change that seems obviously safe.
+3. Apply the draft — this affects every host and VM in the cluster simultaneously (DRS/HA behavior is cluster-wide by definition); there's no way to stage this to "just one host first."
+4. Re-check compliance after applying. A compliance check reports drift between actual and declared configuration — it's a detection tool, not a remediation tool; finding non-compliance doesn't fix it, you still have to decide whether to apply a corrected draft or accept the drift.
 
 ## Patterns
 

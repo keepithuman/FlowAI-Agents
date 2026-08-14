@@ -12,7 +12,11 @@ description: How to configure NetScaler ICA proxy for access to Citrix Virtual A
 
 ## Operational procedure
 
-Requires the Gateway vserver to already exist (see the `ssl-vpn` skill). Create the ICA action/policy pointing at the actual StoreFront/broker address, bind it to the vserver. Verify with a real client launch, not just a successful API bind — most ICA proxy failures happen on the StoreFront handshake side, which is invisible from the NetScaler configuration alone.
+1. Confirm the Gateway vserver already exists (see the `ssl-vpn` skill).
+2. Create the ICA action pointing at the actual StoreFront/broker address.
+3. Create the ICA policy.
+4. Bind the policy to the Gateway vserver.
+5. Verify with a real client launch, not just a successful API bind — most ICA proxy failures happen on the StoreFront handshake side, which is invisible from the NetScaler configuration alone.
 
 ## Patterns
 

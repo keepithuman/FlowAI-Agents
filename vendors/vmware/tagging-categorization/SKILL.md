@@ -12,11 +12,10 @@ description: How to create and manage VMware vSphere tag categories and tags for
 
 ## Operational procedure
 
-A tag category defines the *type* of tag (e.g. "Environment") and which object types it applies to; a tag is a specific value within that category (e.g. "Production"). Create the category before the tag — a tag can't exist outside a category.
-
-Decide up front whether a category allows multiple tags per object or exactly one — this is a category-level setting decided at creation time, not something to casually change later once tags are widely applied.
-
-Tags are the mechanism most automation uses to *find* objects — a tagging mistake doesn't just look wrong, it can silently break whatever downstream process was filtering by that tag.
+1. Decide whether the category allows multiple tags per object or exactly one — this is a category-level setting decided at creation time, not something to casually change later once tags are widely applied.
+2. Create the tag category — it defines the *type* of tag (e.g. "Environment") and which object types it applies to.
+3. Create tags within that category (e.g. "Production") — a tag can't exist outside a category.
+4. Apply tags to objects. Tags are the mechanism most automation uses to *find* objects — a tagging mistake doesn't just look wrong, it can silently break whatever downstream process was filtering by that tag.
 
 ## Patterns
 

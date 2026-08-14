@@ -12,7 +12,9 @@ description: How to configure NetScaler static routes and review interface state
 
 ## Operational procedure
 
-Verify an interface's actual physical/link state before relying on it in a route. A route bound to a down interface doesn't fail at creation time — it fails silently until traffic actually needs that path.
+1. Check the interface's actual physical/link state first.
+2. Only then create or update a route that relies on that interface — a route bound to a down interface doesn't fail at creation time, it fails silently until traffic actually needs that path.
+3. Test the route with real traffic from the actual originating segment, not just a create-success check.
 
 ## Patterns
 

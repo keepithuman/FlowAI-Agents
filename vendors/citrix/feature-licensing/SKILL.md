@@ -12,7 +12,10 @@ description: How to enable/disable NetScaler features and operating modes, and c
 
 ## Operational procedure
 
-Confirm a feature is actually licensed before attempting to enable it. Enabling an unlicensed feature usually fails cleanly, but some feature/license combinations fail in confusing, firmware-version-dependent ways — check license and feature status together, not as two independent steps.
+1. Check the feature's license status.
+2. Check the feature/mode's current enabled state alongside it — check both together, not as two independent steps; some combinations fail in confusing, firmware-version-dependent ways when checked separately.
+3. Enable or disable the feature/mode.
+4. Confirm the feature is actually active via a real functional check, not just "enabled" in config.
 
 ## Patterns
 

@@ -12,9 +12,10 @@ description: How to check VMware vSphere SPBM storage-policy compliance and comp
 
 ## Operational procedure
 
-Storage-policy compatibility checking is a pre-flight check, not a permanent guarantee — a policy compatible with a datastore today can become non-compliant later if the datastore's underlying capabilities change. Worth re-checking periodically, not just once at VM-creation time.
-
-Compliance reporting is inherently retrospective — it reports the last-known compliance state. If you need to know the compliance state *right now*, trigger a fresh compliance check rather than trusting a list that could be stale.
+1. Identify the target datastore or VM.
+2. Check storage-policy compatibility against that specific datastore — this is a pre-flight check, not a permanent guarantee; a policy compatible today can become non-compliant later if the datastore's underlying capabilities change.
+3. For a compliance question, trigger a fresh compliance check rather than trusting a potentially-stale list — compliance reporting is inherently retrospective.
+4. Re-check compatibility periodically, not just once at VM-creation time.
 
 ## Patterns
 

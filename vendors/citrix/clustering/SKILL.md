@@ -12,7 +12,10 @@ description: How to set up NetScaler multi-box clustering, including why base co
 
 ## Operational procedure
 
-Establish the cluster instance and its config-sync approach before adding nodes — nodes joining a cluster inherit the cluster's existing configuration, so get the base configuration correct on one node first, then add nodes, rather than configuring after nodes have already joined.
+1. Establish the cluster instance and its config-sync approach.
+2. Get the base configuration correct on one node first.
+3. Add nodes — they inherit the cluster's existing configuration, which is why step 2 has to come first, not after nodes have already joined.
+4. Confirm each new node actually inherited the intended configuration, via list, not assumed from the add-node call's success.
 
 ## Patterns
 

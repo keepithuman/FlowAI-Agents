@@ -12,11 +12,11 @@ description: How to configure VMware vSphere performance-metric acquisition spec
 
 ## Operational procedure
 
-An acquisition spec defines what gets collected and how often — creating one has a real, ongoing resource cost, so don't create broad, high-frequency specs "just in case" when a narrower one answers the actual question.
-
-Querying already-collected data only returns data for the time range and objects an acquisition spec was actually configured to collect — if the data isn't there, the answer is "no spec was collecting that," not "the query is broken."
-
-Counter availability varies by object type and sometimes by vSphere version — a counter that exists for VMs doesn't necessarily exist for hosts or datastores; check the real counter list for the specific object type rather than assuming a counter name transfers.
+1. Identify exactly what needs measuring — the object type and the specific metric.
+2. Check the real counter list for that specific object type — a counter that exists for VMs doesn't necessarily exist for hosts or datastores; don't assume a counter name transfers.
+3. Create the narrowest acquisition spec that answers the question — specs have a real, ongoing resource cost, so don't create broad, high-frequency specs "just in case."
+4. Query the collected data for the same scope (objects, time range) the spec was configured to collect.
+5. If a query returns empty, check the spec's actual scope first — the answer is usually "no spec was collecting that," not "the query is broken."
 
 ## Patterns
 

@@ -12,7 +12,10 @@ description: How to configure NetScaler LACP link-aggregation channels, includin
 
 ## Operational procedure
 
-The NetScaler-side channel configuration and the upstream switch's LACP configuration must agree (same member ports, same negotiation mode) — a channel configured only on the NetScaler side will never form an active bundle if the switch side doesn't match it.
+1. Create the channel first.
+2. Add member interfaces into it.
+3. Confirm the upstream switch's LACP configuration agrees (same member ports, same negotiation mode) — a channel configured only on the NetScaler side will never form an active bundle otherwise.
+4. Confirm the channel has actually formed an active bundle, not just that it's configured.
 
 ## Patterns
 

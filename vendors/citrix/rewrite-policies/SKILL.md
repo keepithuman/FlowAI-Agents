@@ -12,7 +12,11 @@ description: How to configure NetScaler rewrite policies to modify request/respo
 
 ## Operational procedure
 
-Same action-then-policy-then-bind sequence as other NetScaler policy-driven features: build the rewrite action first (how to modify a request/response — header or body), then the rewrite policy (the match expression that triggers it), then bind. Rewrite changes are traffic-visible immediately and apply in-line to real requests — always validate against a non-production vserver first; a bad rewrite expression doesn't fail loudly, it just serves subtly wrong content.
+1. Build the rewrite action first — how to modify a request/response (header or body).
+2. Build the rewrite policy next — the match expression that triggers it.
+3. Bind the policy to the target vserver.
+4. Validate against a non-production vserver first, always. Rewrite changes are traffic-visible immediately and apply in-line to real requests — a bad rewrite expression doesn't fail loudly, it just serves subtly wrong content.
+5. Inspect a real request/response after binding to confirm the actual output.
 
 ## Patterns
 

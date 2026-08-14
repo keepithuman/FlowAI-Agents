@@ -12,7 +12,10 @@ description: How to connect, disconnect, and list VMware vSphere ESXi hosts, and
 
 ## Operational procedure
 
-Disconnecting a host doesn't power off or migrate the VMs running on it — they keep running, but vCenter loses management visibility and control until the host reconnects. Never disconnect a host as a first response to "it's misbehaving" without checking what's currently running on it and whether those VMs can tolerate a management gap.
+1. Before disconnecting a host, check what VMs are currently running on it and whether they can tolerate a management gap.
+2. Disconnect the host — this doesn't power off or migrate its VMs; only vCenter's visibility and control are lost.
+3. Reconnect when ready.
+4. Confirm vCenter's management visibility is actually restored for VMs on that host.
 
 ## Patterns
 

@@ -12,7 +12,10 @@ description: How to configure NetScaler bot detection and mitigation profiles/po
 
 ## Operational procedure
 
-Create the profile (the actual detection technique — signature, fingerprint, rate-based) before the policy (the traffic-match expression). Start any new profile in log-only/inspect mode before switching it to block — a bot profile placed straight into blocking mode turns any false positive directly into a real outage for a real user, with no observation window to catch it first.
+1. Create the profile first — the actual detection technique (signature, fingerprint, rate-based).
+2. Create the policy — the traffic-match expression.
+3. Bind the policy in log-only/inspect mode.
+4. Observe for false positives before switching to block mode — placed straight into blocking mode, a bot profile turns any false positive directly into a real outage for a real user, with no observation window to catch it first.
 
 ## Patterns
 
