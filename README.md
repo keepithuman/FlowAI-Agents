@@ -35,6 +35,7 @@ The exact contract every vendor package must satisfy is defined in [`docs/AGENT-
 | Vendor | Domain | Projects | Agents |
 |---|---|---|---|
 | [Citrix](./vendors/citrix/) | NetScaler ADC — load balancing, traffic routing, SSL, GSLB, security, remote access, system administration, networking, clustering/HA, DNS, bot management, traffic optimization | 13 | 33 |
+| [VMware](./vendors/vmware/) | vSphere — VM operations, infrastructure inventory, storage, resource pools, content library, guest customization, tagging, RBAC, certificates, VM encryption, cluster configuration, performance metrics, diagnostics | 1 | 13 |
 
 ## Design principles that apply across every vendor, not just one
 

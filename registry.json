@@ -342,6 +342,107 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "vmware",
+      "name": "VMware",
+      "domain": "vSphere",
+      "path": "vendors/vmware",
+      "readme": "vendors/vmware/README.md",
+      "agentsDoc": "vendors/vmware/AGENTS.md",
+      "skillDoc": "vendors/vmware/SKILL.md",
+      "projectCount": 1,
+      "agentCount": 13,
+      "projects": [
+        {
+          "slug": "vmware-vsphere-operations",
+          "name": "VMware vSphere Operations",
+          "description": "VM operations, infrastructure inventory, storage, resource pools, content library, guest customization, tagging, RBAC, certificates, VM encryption, cluster configuration, performance metrics, and diagnostics",
+          "path": "vendors/vmware/projects/vmware-vsphere-operations.project.json",
+          "sourceProjectId": "c32735ad-9876-440b-ba55-fa082fe3ca27",
+          "agentCount": 13,
+          "agents": [
+            {
+              "name": "Access Control (RBAC) Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Certificate Management Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Cluster Configuration & Compliance Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Content Library & Templates Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Datacenter, Cluster, Host & Network Agent",
+              "toolCount": 9,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Guest Customization Agent",
+              "toolCount": 6,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Performance Metrics Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Resource Pool Management Agent",
+              "toolCount": 6,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Storage & Datastore Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "Tagging & Categorization Agent",
+              "toolCount": 8,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "VM Encryption & KMS Agent",
+              "toolCount": 7,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "VM Operations Agent",
+              "toolCount": 6,
+              "requiresApproval": true,
+              "readOnly": false
+            },
+            {
+              "name": "vCenter & Appliance Diagnostics Agent",
+              "toolCount": 7,
+              "requiresApproval": false,
+              "readOnly": true
+            }
+          ]
+        }
+      ]
     }
   ]
 }
