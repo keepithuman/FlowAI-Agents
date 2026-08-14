@@ -5,13 +5,31 @@ description: Operational procedures for VMware vSphere - VM operations, datacent
 
 # VMware vSphere — Operational Skill Reference
 
-This document teaches the real vSphere procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It does not assume Itential — a ready-to-import reference implementation exists if you want it (see the end of this document), but everything above that is self-contained.
+This document teaches the real vSphere procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It doesn't assume any particular orchestration platform — the exhaustive operation lookup lives in this same file's Tools section.
 
 ## When to use this skill
 
 - Designing or reviewing any automation (agent, script, workflow) that touches VM operations, vSphere infrastructure inventory, storage, resource pools, content libraries, guest customization, tagging, access control, certificates, VM encryption, cluster configuration, or performance metrics.
 - Debugging why a vSphere change didn't have the expected effect, even though the API call that made it reported success.
 - Deciding what order to sequence a set of vSphere configuration changes in.
+
+**Capability index** — jump straight to the procedure that answers a specific request:
+
+| A request is about... | Procedure |
+|---|---|
+| Cloning or relocating a VM, console access | [VM operations](#vm-operations-clone-relocate-console-access) |
+| Datacenter/cluster/host/network inventory, host connect/disconnect | [Datacenter, cluster, host & network inventory](#datacenter-cluster-host--network-inventory) |
+| Datastore capacity, storage-policy compliance/compatibility | [Storage & datastore management](#storage--datastore-management) |
+| Content library management, VM template capture/deploy | [Content library & templates](#content-library--templates) |
+| Tag categories and tags for organizing/targeting inventory | [Tagging & categorization](#tagging--categorization) |
+| vCenter's own TLS certificate renewal, trusted root chains | [Certificate management](#certificate-management-vcenters-own-tls) |
+| "Is VCHA healthy?", appliance uptime/version/load | [vCenter & appliance diagnostics](#vcenter--appliance-diagnostics) |
+| Creating/resizing/deleting a resource pool | [Resource pool management](#resource-pool-management) |
+| Roles, privileges, who-can-do-what | [Access control (RBAC)](#access-control-rbac) |
+| Guest OS customization specs for deployment | [Guest customization](#guest-customization) |
+| Cluster desired-state config (DRS/HA), compliance checks | [Cluster configuration & compliance](#cluster-configuration--compliance-drsha-desired-state) |
+| KMS provider setup backing VM encryption | [VM encryption & KMS](#vm-encryption--kms) |
+| "What's the CPU usage on VM X?", new metric collection | [Performance metrics](#performance-metrics) |
 
 ## Operational procedures
 
@@ -124,9 +142,169 @@ Counter availability varies by object type and sometimes by vSphere version — 
 - **Deletion has different blast radius depending on what "contains" the deleted object.** Deleting a datacenter cascades to everything inside it. Deleting a resource pool reparents (doesn't delete) the VMs inside it. Deleting a KMS provider doesn't touch the VMs it encrypted, but can make their data unreachable. Know which kind of deletion you're proposing, and say so explicitly wherever the proposal is reviewed.
 - **Two real capability gaps exist in the modern REST-based vSphere Automation API that don't exist in the older SOAP-based vSphere API**: there is no VM snapshot management (create/revert/delete) and no standard distributed-switch/port-group management (only Kubernetes/Tanzu-scoped switch methods exist). If a request needs either, it needs a different API surface than the one this document assumes — that's a real product limitation, not a search failure.
 
-## Reference implementation
+## Known limitations
 
-The procedures above are already built and running as a real, verified Itential FlowAI project — 13 agents — in [`projects/`](./projects/). If you're on Itential, that's a ready-to-import accelerator; if you're not, the procedures above are everything you need. See [`README.md`](./README.md) for the project index and [`registry.json`](../../registry.json) for the full machine-readable listing.
+- **No cross-object blast-radius reasoning.** These procedures describe how to look up the state directly relevant to one action, not how to trace a full dependency graph — e.g., checking every VM currently drawing from a resource pool before proposing a change to it. Whoever reviews a proposed change is still the backstop for catching that.
+- **Ticket-driven / change-management-integrated variants of VM provisioning, resizing, or decommissioning are a different design** (structured intake, audit trail in an external system of record) and are out of scope for the procedures above, which assume a direct, free-text request. Building that integration is a legitimate follow-on, not something these procedures already handle.
+
+## Tools
+
+Every operation below is a real, confirmed-active method on the VMware vSphere Automation REST API (source: the vSphere Automation adapter's live task catalog, dot-notation naming matching VMware's own API namespace).
+
+### VM Operations
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.VM_list` | List virtual machines | VM Operations |
+| `Vcenter.VM_get` | Get a single VM's full configuration | VM Operations |
+| `Vcenter.VM_clone` | Create a full independent copy of a VM | VM Operations |
+| `Vcenter.VM_relocate` | Move a VM's compute (host/cluster), storage (datastore), or both | VM Operations |
+| `Vcenter.Vm.Console.Tickets_create` | Generate a time-limited remote console access ticket for a VM | VM Operations |
+
+### Datacenter, Cluster, Host & Network
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.Datacenter_list` | List datacenters (top-level inventory containers) | Datacenter |
+| `Vcenter.Datacenter_create` | Create a new datacenter | Datacenter |
+| `Vcenter.Datacenter_delete` | Delete a datacenter — cascades to everything organized inside it | Datacenter |
+| `Vcenter.Cluster_list` | List clusters | Cluster |
+| `Vcenter.Host_list` | List ESXi hosts | Host |
+| `Vcenter.Host_connect` | Connect a host to vCenter's management | Host |
+| `Vcenter.Host_disconnect` | Disconnect a host from vCenter's management (VMs on it keep running, unmanaged) | Host |
+| `Vcenter.Network_list` | List networks/port groups | Network |
+
+### Storage & Datastore
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.Datastore_list` | List datastores | Datastore |
+| `Vcenter.Datastore_get` | Get a single datastore's details, including free/used capacity | Datastore |
+| `Vcenter.Datastore.DefaultPolicy_get` | Get a datastore's default storage policy | Storage Policy |
+| `Vcenter.Storage.Policies_list` | List SPBM storage policies | Storage Policy |
+| `Vcenter.Storage.Policies_checkCompatibility` | Check whether a storage policy is compatible with a given datastore | Storage Policy |
+| `Vcenter.Storage.Policies.Compliance_list` | List storage-policy compliance status across entities | Storage Policy |
+| `Vcenter.Storage.Policies.VM_list` | List which storage policy is assigned to which VM | Storage Policy |
+
+### Content Library & Templates
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Content.Library_list` | List content libraries (local and subscribed) | Content Library |
+| `Content.Library_get` | Get a single content library's details | Content Library |
+| `Content.LocalLibrary_create` | Create a new local (directly editable) content library | Content Library |
+| `Content.LocalLibrary_update` | Change an existing local library's settings | Content Library |
+| `Content.LocalLibrary_delete` | Delete a local content library | Content Library |
+| `Vcenter.VmTemplate.LibraryItems_create` | Capture a VM as a template library item (freezes current disk state as the base image) | VM Templates |
+| `Vcenter.VmTemplate.LibraryItems_deploy` | Deploy a new VM from a template library item | VM Templates |
+| `Vcenter.VmTemplate.LibraryItems_get` | Get a template library item's details | VM Templates |
+
+### Tagging & Categorization
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Cis.Tagging.Category_list` | List tag categories (the type of tag, and what object types it applies to) | Tagging |
+| `Cis.Tagging.Category_create` | Create a new tag category | Tagging |
+| `Cis.Tagging.Category_get` | Get a tag category's details | Tagging |
+| `Cis.Tagging.Tag_list` | List tags | Tagging |
+| `Cis.Tagging.Tag_create` | Create a new tag within a category | Tagging |
+| `Cis.Tagging.Tag_get` | Get a tag's details | Tagging |
+| `Cis.Tagging.Tag_update` | Change an existing tag | Tagging |
+
+### Certificate Management (vCenter's own TLS)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.CertificateManagement.Vcenter.Tls_get` | Get vCenter's current TLS certificate details | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.Tls_renew` | Renew vCenter's TLS certificate | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.Tls_set` | Replace vCenter's TLS certificate with a specific one | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.TlsCsr_create` | Generate a certificate signing request for external CA signing | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.TrustedRootChains_list` | List trusted root certificate chains | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.TrustedRootChains_create` | Add a new trusted root chain | Certificate Management |
+| `Vcenter.CertificateManagement.Vcenter.TrustedRootChains_delete` | Remove a trusted root chain | Certificate Management |
+
+### vCenter & Appliance Diagnostics (read-only)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.Vcha.Cluster_get` | Get vCenter High Availability (VCHA) cluster configuration | VCHA Status |
+| `Vcenter.Vcha.Cluster.Active_get` | Get the currently active (primary) VCHA node | VCHA Status |
+| `Vcenter.Vcha.Operations_get` | Get available/pending VCHA operations | VCHA Status |
+| `Appliance.Health.System_get` | Get overall appliance system health | Appliance Health |
+| `Appliance.Health.Load_get` | Get the appliance's current load | Appliance Health |
+| `Appliance.System.Version_get` | Get the appliance's software version | Appliance Health |
+| `Appliance.System.Uptime_get` | Get the appliance's uptime (resets on any vCenter service restart, not just a full reboot) | Appliance Health |
+
+### Resource Pool Management
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.ResourcePool_list` | List resource pools | Resource Pool |
+| `Vcenter.ResourcePool_get` | Get a single resource pool's configuration | Resource Pool |
+| `Vcenter.ResourcePool_create` | Create a new resource pool | Resource Pool |
+| `Vcenter.ResourcePool_update` | Change an existing resource pool's CPU/memory shares, reservations, or limits | Resource Pool |
+| `Vcenter.ResourcePool_delete` | Delete a resource pool — VMs inside get reparented to the pool's parent, not deleted | Resource Pool |
+
+### Access Control (RBAC)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.Authorization.Roles_list` | List roles (named privilege sets) | RBAC |
+| `Vcenter.Authorization.Roles_create` | Create a new role | RBAC |
+| `Vcenter.Authorization.Roles_update` | Change an existing role's privileges | RBAC |
+| `Vcenter.Authorization.Roles_delete` | Delete a role | RBAC |
+| `Vcenter.Authorization.Permissions_list` | List permissions (role assignments on specific objects) | RBAC |
+| `Vcenter.Authorization.Permissions_create` | Assign a role to a principal on a specific object | RBAC |
+| `Vcenter.Authorization.Permissions_delete` | Remove a permission assignment | RBAC |
+
+### Guest Customization
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.Guest.CustomizationSpecs_list` | List guest OS customization specs | Guest Customization |
+| `Vcenter.Guest.CustomizationSpecs_get` | Get a single customization spec's details | Guest Customization |
+| `Vcenter.Guest.CustomizationSpecs_create` | Create a new customization spec (hostname, network config, domain join, etc.) | Guest Customization |
+| `Vcenter.Guest.CustomizationSpecs_set` | Replace an existing customization spec's content | Guest Customization |
+| `Vcenter.Guest.CustomizationSpecs_delete` | Delete a customization spec | Guest Customization |
+
+### Cluster Configuration & Compliance (DRS/HA desired state)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Esx.Settings.Clusters.Configuration_get` | Get a cluster's current desired-state configuration | Cluster Configuration |
+| `Esx.Settings.Clusters.Configuration_checkCompliance$Task` | Check whether a cluster's actual configuration matches its declared desired state | Cluster Configuration |
+| `Esx.Settings.Clusters.Configuration.Drafts_create` | Create a draft of a proposed configuration change (doesn't touch the live cluster) | Cluster Configuration |
+| `Esx.Settings.Clusters.Configuration.Drafts_get` | Get a draft's contents | Cluster Configuration |
+| `Esx.Settings.Clusters.Configuration.Drafts_list` | List pending configuration drafts | Cluster Configuration |
+| `Esx.Settings.Clusters.Configuration_apply$Task` | Apply a draft's configuration to the live cluster (affects every host/VM in it) | Cluster Configuration |
+
+### VM Encryption & KMS
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vcenter.CryptoManager.Kms.Providers_list` | List configured Key Management Server (KMS) providers | VM Encryption |
+| `Vcenter.CryptoManager.Kms.Providers_get` | Get a single KMS provider's configuration | VM Encryption |
+| `Vcenter.CryptoManager.Kms.Providers_create` | Add a new KMS provider | VM Encryption |
+| `Vcenter.CryptoManager.Kms.Providers_update` | Change an existing KMS provider's connection details | VM Encryption |
+| `Vcenter.CryptoManager.Kms.Providers_delete` | Remove a KMS provider — can make VMs encrypted with its keys inaccessible if not recoverable elsewhere | VM Encryption |
+| `Vcenter.Crypto.Fips.Modules_list` | List FIPS cryptographic modules in use (relevant for regulated/compliance environments) | VM Encryption |
+
+### Performance Metrics
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `Vstats.AcqSpecs_list` | List metric-acquisition specs (what's being collected and how often) | Performance Metrics |
+| `Vstats.AcqSpecs_create` | Create a new acquisition spec | Performance Metrics |
+| `Vstats.AcqSpecs_update` | Change an existing acquisition spec | Performance Metrics |
+| `Vstats.AcqSpecs_delete` | Delete an acquisition spec (stops that collection) | Performance Metrics |
+| `Vstats.Counters_list` | List available performance counters | Performance Metrics |
+| `Vstats.Data_queryDataPoints` | Query already-collected performance data | Performance Metrics |
+| `Vstats.Metrics_list` | List available metrics | Performance Metrics |
+
+Two common VMware operations are **not** present anywhere in this REST API's operation set (confirmed by exhaustive search, not a naming miss):
+
+- **VM snapshots** (create/revert/delete) — this capability exists in the older SOAP-based vSphere API and has not been ported to the modern REST-based vSphere Automation API as of this writing.
+- **Standard distributed-switch/port-group management** — the only switch-adjacent operations that exist are scoped to Kubernetes/Tanzu supervisor networking (`Vcenter.NamespaceManagement.Networks.Nsx.*`), not general-purpose vSphere networking.
 
 ## Verification checklist
 

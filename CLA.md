@@ -28,7 +28,7 @@ a) You are legally entitled to grant the above license. If your employer(s) has 
 
 b) Each of Your Contributions is Your original creation (see section 7 for submissions on behalf of others).
 
-c) Your Contribution submissions include complete details of any third-party license or other restriction (including, but not limited to, related patents and trademarks) of which you are personally aware and which are associated with any part of Your Contributions. This matters especially for vendor packages under `vendors/` — a `.project.json` file that embeds or depends on a third party's proprietary API documentation, schema, or licensed content must disclose that clearly.
+c) Your Contribution submissions include complete details of any third-party license or other restriction (including, but not limited to, related patents and trademarks) of which you are personally aware and which are associated with any part of Your Contributions. This matters especially for vendor packages under `vendors/` — a `SKILL.md` that embeds or depends on a third party's proprietary API documentation, schema, or licensed content must disclose that clearly.
 
 ### 5. Support
 

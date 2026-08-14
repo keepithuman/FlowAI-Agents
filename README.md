@@ -2,46 +2,45 @@
 
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-A vendor-organized marketplace of network and infrastructure automation agents — organized by the real operational procedure for each domain (vendor-neutral, no platform assumed), with a ready-to-import [Itential FlowAI](https://www.itential.com/) reference implementation for every procedure so you can accelerate the build if you happen to be on that platform.
+A vendor-organized library of network and infrastructure operational skills — real procedures, real API operations, zero platform lock-in. Load a vendor's skill into whatever skill registry or agent framework you already use; nothing here assumes a specific orchestration platform.
 
 ## Why this exists
 
-Most agent examples floating around are either a single hero demo or a wall of undocumented JSON, and most are tied to one specific orchestration platform whether they need to be or not. This repo aims to be neither: the procedure knowledge in each vendor's `SKILL.md` stands on its own regardless of what executes it, and every accompanying `.project.json` is a real, verified reference implementation — not hand-authored from memory. The documentation format is deliberately built on conventions that already exist elsewhere — `AGENTS.md` and Claude's `SKILL.md` — so a vendor package here is legible to tools that already understand either one, with no adapter layer.
+Most agent examples floating around are either a single hero demo or a wall of undocumented JSON, and most are tied to one specific orchestration platform whether they need to be or not, or to one specific platform's live build state to even verify. This repo aims to be neither: each vendor's `SKILL.md` teaches the real operational procedure — sequencing, decision points, load-bearing caveats — and then gives you the exhaustive tool reference — every real operation, named exactly as the vendor's own API/CLI names it, with a plain-English description — in the same file. It doesn't require live access to a running instance of the target product to build or verify — it's sourced from the vendor's own public documentation, which means this format scales to covering a lot of vendors, not just the ones someone happens to have lab access to.
+
+The documentation format reuses a convention that already has independent industry traction — Claude's `SKILL.md` — so a vendor package here is legible to any tool that already understands it, with no adapter layer.
 
 ## How it's organized
 
 ```
 vendors/<vendor-slug>/
-├── README.md      — what's here, at a glance
-├── AGENTS.md       — orientation: domain overview, design principles, capability index
-├── SKILL.md          — the real operational procedure, vendor-neutral
-└── projects/
-    └── *.project.json   — real, exported FlowAI project bundles (Itential accelerator, optional)
+├── README.md            — what's here, at a glance
+└── SKILL.md              — the real operational procedure + exhaustive tool reference, vendor-neutral
 ```
 
 The exact contract every vendor package must satisfy is defined in [`docs/AGENT-FORMAT-SPEC.md`](./docs/AGENT-FORMAT-SPEC.md) — read that before adding a new vendor or judging whether an existing one is "done."
 
-[`registry.json`](./registry.json) is the machine-readable index of every vendor, project, and agent in this repo — the thing a catalog UI or search tool would actually query, rather than crawling markdown.
+[`registry.json`](./registry.json) is the machine-readable index of every vendor in this repo — the thing a catalog UI or search tool would actually query, rather than crawling markdown.
 
-## Using an agent from this marketplace
+## Using a skill from this marketplace
 
-1. Find the vendor and project you need via [`registry.json`](./registry.json) or by browsing `vendors/`.
-2. Read that vendor's `AGENTS.md` for the design principles and capability map, and `SKILL.md` for the real operational procedure. If you need the exact tool list for a specific agent, that lives in the relevant `.project.json` file.
-3. Import the project file: `POST /agent-project-service/project-bundles/import` on your Itential Platform instance, with the `.project.json` contents as the `bundle` field. You'll need to resolve `provider` (LLM profile/model) to something that exists in *your* environment — the values in each export reflect the platform they were built on, not a portable default.
-4. Verify before trusting: `GET` each imported agent back, confirm every tool resolved to a real `referenceId` (not `unauthorizedReferenceId`), and confirm `provider` is populated. See the vendor's `SKILL.md` for a fuller verification checklist.
+1. Find the vendor you need via [`registry.json`](./registry.json) or by browsing `vendors/`.
+2. Read that vendor's `SKILL.md` for the real operational procedure and its capability index (which section answers which kind of request).
+3. Load `SKILL.md` into your skill registry / agent framework of choice — it's already in the Claude Skills shape (YAML frontmatter + markdown), and portable to anything else that consumes similarly-shaped skill documents.
+4. When you (or an agent you build) need the exact operation name for a step in the procedure, look it up in the same `SKILL.md`'s Tools section.
 
 ## Vendors currently in the marketplace
 
-| Vendor | Domain | Projects | Agents |
-|---|---|---|---|
-| [Citrix](./vendors/citrix/) | NetScaler ADC — load balancing, traffic routing, SSL, GSLB, security, remote access, system administration, networking, clustering/HA, DNS, bot management, traffic optimization | 13 | 33 |
-| [VMware](./vendors/vmware/) | vSphere — VM operations, infrastructure inventory, storage, resource pools, content library, guest customization, tagging, RBAC, certificates, VM encryption, cluster configuration, performance metrics, diagnostics | 1 | 13 |
+| Vendor | Domain | Real operations documented |
+|---|---|---|
+| [Citrix](./vendors/citrix/) | NetScaler ADC — load balancing, traffic routing, SSL, GSLB, security, remote access, system administration, networking, clustering/HA, DNS, bot management, traffic optimization | 211 |
+| [VMware](./vendors/vmware/) | vSphere — VM operations, infrastructure inventory, storage, resource pools, content library, guest customization, tagging, RBAC, certificates, VM encryption, cluster configuration, performance metrics, diagnostics | 85 |
 
-## Design principles that apply across every vendor, not just one
+## Principles that apply across every vendor, not just one
 
-- **Propose, then wait, then act.** Every agent capable of changing a real system's state proposes the exact change and requires explicit human approval before it executes. This is not a per-vendor style choice — it's the baseline every vendor package must meet.
-- **Small, single-purpose agents over mega-agents.** An agent with 20+ tools degrades as an LLM tool-caller — it starts missing relevant tools or picking plausible-but-wrong ones. Every agent in this marketplace tops out around 10 tools; broader domains become multiple agents in one project, not one large agent.
-- **Nothing published that wasn't actually built and verified.** Every `.project.json` here is a real export from a platform where the project was created and its agents `GET`-verified — not a hand-authored guess at what a bundle should look like.
+- **Human approval before any state-changing action.** Every procedure that can mutate a real system's state says so explicitly, and describes proposing the exact change before acting on it. This repo doesn't prescribe *how* you implement that gate — that's a decision for whoever builds on top of a skill — but every procedure is written assuming one exists.
+- **No agent architecture baked into the skill.** No tool-count ceilings, no named UI mechanism, no "agents" as objects this repository defines. A skill is domain knowledge; how many tools you hand an LLM at once and how you gate a write are downstream decisions in whatever framework you're using.
+- **Nothing published that wasn't confirmed against a real source.** Every row in every vendor's Tools table traces back to a specific, cited API spec or doc — never invented, never inferred without saying so.
 
 ## Contributing
 

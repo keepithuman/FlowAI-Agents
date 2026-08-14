@@ -5,13 +5,33 @@ description: Operational procedures for Citrix NetScaler (ADC) - load balancing,
 
 # Citrix NetScaler — Operational Skill Reference
 
-This document teaches the real NetScaler procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It does not assume Itential — a ready-to-import reference implementation exists if you want it (see the end of this document), but everything above that is self-contained.
+This document teaches the real NetScaler procedure for each capability area — the sequencing, decision points, and failure modes a domain expert would tell you about, independent of what tool or platform executes the API calls. It doesn't assume any particular orchestration platform — the exhaustive operation lookup lives in `API-REFERENCE.md` alongside this file.
 
 ## When to use this skill
 
 - Designing or reviewing any automation (agent, script, workflow) that touches NetScaler load balancing, traffic routing, SSL, GSLB, security, remote access, system administration, networking, clustering/HA, DNS, bot management, or traffic optimization.
 - Debugging why a NetScaler change didn't have the expected effect, even though the API call that made it reported success.
 - Deciding what order to sequence a set of NetScaler configuration changes in.
+
+**Capability index** — jump straight to the procedure that answers a specific request:
+
+| A request is about... | Procedure |
+|---|---|
+| Standing up / scaling a load-balanced app | [Load balancing](#load-balancing) |
+| Routing by URL/host to different backends | [Traffic routing — content switching](#traffic-routing--content-switching) |
+| Redirecting, blocking, or custom-responding | [Traffic routing — responder policies](#traffic-routing--responder-policies) |
+| Modifying request/response headers or content | [Traffic routing — rewrite policies](#traffic-routing--rewrite-policies) |
+| Installing/renewing an SSL cert, checking expiry | [SSL certificates](#ssl-certificates) |
+| Multi-site DR, geo-routing, GSLB failover | [GSLB / multi-site](#gslb--multi-site) |
+| WAF, LDAP/RADIUS auth, rate limiting | [Security & access](#security--access--waf-authentication-rate-limiting) |
+| "Is X up?", HA status, cert expiry reporting | [Monitoring & diagnostics](#monitoring--diagnostics) |
+| SSL VPN / remote access, VDI access | [Gateway & remote access](#gateway--remote-access) |
+| Admin RBAC, feature/licensing, config backup | [System administration](#system-administration) |
+| IP/VLAN, routing/interfaces, LACP, NAT | [Networking fundamentals](#networking-fundamentals) |
+| Multi-box clustering, HA pairing | [Clustering & high availability](#clustering--high-availability) |
+| DNS record management | [DNS services](#dns-services) |
+| Bot detection/mitigation | [Bot management](#bot-management) |
+| Caching, compression, performance tuning, AppFlow | [Traffic optimization & analytics](#traffic-optimization--analytics) |
 
 ## Operational procedures
 
@@ -123,9 +143,361 @@ Create the profile (the actual detection technique — signature, fingerprint, r
 - **Disable/re-enable beats delete/recreate for anything you might need to reverse under time pressure** (GSLB failover, maintenance windows, temporarily pulling a bad backend). Deletion is for permanent decommissioning, not for reversible operational actions.
 - **Stage-then-attach, not attach-then-configure**, for anything involving external files or connections (SSL certs, LDAP/RADIUS servers, AppFlow collectors, StoreFront/broker addresses for ICA). Confirm the external dependency is reachable/valid on its own before wiring it into a live-traffic-serving object.
 
-## Reference implementation
+## Known limitations
 
-The procedures above are already built and running as real, verified Itential FlowAI projects — 13 projects, 33 agents — in [`projects/`](./projects/). If you're on Itential, that's a ready-to-import accelerator; if you're not, the procedures above are everything you need. See [`README.md`](./README.md) for the project index and [`registry.json`](../../registry.json) for the full machine-readable listing.
+- **No offensive/destructive capability.** This skill covers configuration and delivery — never traffic manipulation for denial-of-service, credential harvesting, or evasion of the appliance's own security controls.
+- **Failover/HA procedures cover configuration, not live incident execution.** Forcing a failover during an actual outage is a higher-stakes action than a routine configuration change; treat the clustering/HA procedures above as setup guidance, not an incident-response runbook.
+- **No cross-object blast-radius reasoning.** These procedures describe how to look up the state directly relevant to one action, not how to trace a full dependency graph (e.g., everything a VLAN change might affect). Whoever reviews a proposed change is still the backstop for catching that.
+
+## Tools
+
+Every operation below is a real, confirmed-active method on the Citrix NetScaler NITRO REST API (source: the NetScaler adapter's live task catalog, cross-checked against the official Citrix NetScaler NITRO 14.1 OpenAPI spec).
+
+### Load Balancing
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `getLbvserverByName` | Look up a single LB virtual server by name | LB VServer |
+| `listLbvserver` | List all LB virtual servers | LB VServer |
+| `createLbvserver` | Create a new LB virtual server (VIP, port, service type, LB method) | LB VServer |
+| `updateLbvserver` | Change an existing LB virtual server's configuration | LB VServer |
+| `listService` | List backend services (individual servers behind a vserver) | LB Service |
+| `createService` | Register a new backend service | LB Service |
+| `updateService` | Change an existing backend service's configuration | LB Service |
+| `listServicegroup` | List service groups (pools of backend servers) | LB Service |
+| `createServicegroup` | Create a new service group | LB Service |
+| `updateServicegroup` | Change an existing service group's configuration | LB Service |
+| `createLbvserverServiceBinding` | Attach an individual backend service to an LB vserver | LB Binding |
+| `createLbvserverServicegroupBinding` | Attach a service group to an LB vserver | LB Binding |
+| `createLbmonitor` | Create a health monitor (HTTP/TCP/ping check, etc.) | LB Monitor |
+| `updateLbmonitor` | Change an existing health monitor's configuration | LB Monitor |
+| `listLbmonitor` | List health monitors | LB Monitor |
+| `createServiceLbmonitorBinding` | Attach a health monitor to a backend service | LB Monitor |
+
+### Traffic Routing — Content Switching
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listCsvserver` | List content-switching virtual servers | CS VServer |
+| `createCsvserver` | Create a new content-switching vserver (the entry point that routes to different backends by URL/host) | CS VServer |
+| `updateCsvserver` | Change an existing CS vserver's configuration | CS VServer |
+| `createCsaction` | Create a CS action (names the target LB vserver or content group a policy routes to) | CS Policy |
+| `updateCsaction` | Change an existing CS action | CS Policy |
+| `createCspolicy` | Create a CS policy (the match expression — e.g. "if URL starts with /api") | CS Policy |
+| `updateCspolicy` | Change an existing CS policy's match rule | CS Policy |
+| `listCspolicy` | List CS policies | CS Policy |
+| `createCsvserverCspolicyBinding` | Attach a CS policy to a CS vserver, with a priority | CS Binding |
+| `listCsvserverCspolicyBinding` | List which CS policies are bound to a CS vserver | CS Binding |
+| `createCsvserverLbvserverBinding` | Attach an LB vserver as a target behind a CS vserver | CS Binding |
+| `listCsvserverLbvserverBinding` | List which LB vservers are bound behind a CS vserver | CS Binding |
+
+### Traffic Routing — Responder Policies
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `createResponderaction` | Create a responder action (what to actually do: redirect, respond-with, drop) | Responder |
+| `updateResponderaction` | Change an existing responder action | Responder |
+| `createResponderpolicy` | Create a responder policy (the match expression that triggers the action) | Responder |
+| `updateResponderpolicy` | Change an existing responder policy's rule | Responder |
+| `listResponderpolicy` | List responder policies | Responder |
+| `createResponderpolicyCsvserverBinding` | Bind a responder policy to a content-switching vserver | Responder Binding |
+| `createLbvserverResponderpolicyBinding` | Bind a responder policy to an LB vserver — **this is the vserver-owned direction that actually has a real backing command**; the policy-owned direction (`createResponderpolicyLbvserverBinding`) is schema-valid but returns NetScaler error 1088 at runtime and should not be used | Responder Binding |
+| `listLbvserverResponderpolicyBinding` | List responder policies bound to an LB vserver | Responder Binding |
+
+### Traffic Routing — Rewrite Policies
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `createRewriteaction` | Create a rewrite action (how to modify a request/response — header or body) | Rewrite |
+| `updateRewriteaction` | Change an existing rewrite action | Rewrite |
+| `createRewritepolicy` | Create a rewrite policy (the match expression that triggers the rewrite) | Rewrite |
+| `updateRewritepolicy` | Change an existing rewrite policy's rule | Rewrite |
+| `listRewritepolicy` | List rewrite policies | Rewrite |
+
+### Traffic Routing — Policy Building Blocks
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listPolicydataset` | List datasets (typed value collections referenced by policy expressions) | Policy Building Blocks |
+| `createPolicydataset` | Create a new dataset | Policy Building Blocks |
+| `createPolicydatasetValueBinding` | Add a value into an existing dataset | Policy Building Blocks |
+| `listPolicypatset` | List pattern sets (string-pattern collections referenced by policy expressions) | Policy Building Blocks |
+| `createPolicypatset` | Create a new pattern set | Policy Building Blocks |
+| `createPolicypatsetPatternBinding` | Add a pattern into an existing pattern set | Policy Building Blocks |
+| `listPolicystringmap` | List string maps (key→value lookup tables referenced by policy expressions) | Policy Building Blocks |
+| `createPolicystringmap` | Create a new string map | Policy Building Blocks |
+| `createPolicystringmapPatternBinding` | Add a key/value pair into an existing string map | Policy Building Blocks |
+
+### SSL Certificates
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listSslcertkey` | List installed SSL certificate-key pairs | SSL Certificate |
+| `getSslcertkeyByName` | Look up a single certificate-key pair by name (includes expiry) | SSL Certificate |
+| `createSslcertkey` | Install a new certificate-key pair (from files already staged on the appliance) | SSL Certificate |
+| `updateSslcertkey` | Update an existing certificate-key pair's settings | SSL Certificate |
+| `createSslvserverSslcertkeyBinding` | Bind a certificate to an SSL-enabled vserver | SSL Certificate |
+| `listSslvserverSslcertkeyBinding` | List which certificate is bound to an SSL vserver | SSL Certificate |
+
+### GSLB & Multi-Site
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listGslbvserver` | List GSLB (Global Server Load Balancing) virtual servers — the global entry points for multi-site routing | GSLB VServer |
+| `createGslbvserver` | Create a new GSLB vserver | GSLB VServer |
+| `updateGslbvserver` | Change an existing GSLB vserver's configuration | GSLB VServer |
+| `listGslbservice` | List GSLB services (per-site local endpoints) | GSLB Service |
+| `createGslbservice` | Create a new GSLB service representing one site's endpoint | GSLB Service |
+| `updateGslbservice` | Change an existing GSLB service's configuration — commonly used to disable a service for failover | GSLB Service |
+| `createGslbsite` | Create a GSLB site — required before sites can exchange health/metric data with each other | GSLB Site |
+| `listGslbsite` | List configured GSLB sites | GSLB Site |
+| `createGslbvserverServiceBinding` | Attach a per-site GSLB service to a GSLB vserver | GSLB Binding |
+| `listGslbvserverServiceBinding` | List which GSLB services are bound to a GSLB vserver | GSLB Binding |
+| `createGslbvserverDomainBinding` | Bind a domain name to a GSLB vserver so DNS queries resolve through it | GSLB Binding |
+| `listGslbvserverDomainBinding` | List which domains are bound to a GSLB vserver | GSLB Binding |
+
+### Security & Access — WAF (AppFirewall)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listAppfwprofile` | List Web Application Firewall profiles (rulesets/relaxations) | WAF |
+| `createAppfwprofile` | Create a new WAF profile | WAF |
+| `updateAppfwprofile` | Change an existing WAF profile's settings | WAF |
+| `listAppfwpolicy` | List WAF policies (the match expression selecting which traffic a profile applies to) | WAF |
+| `createAppfwpolicy` | Create a new WAF policy | WAF |
+| `updateAppfwpolicy` | Change an existing WAF policy's match rule | WAF |
+| `createLbvserverAppfwpolicyBinding` | Bind a WAF policy to an LB vserver | WAF |
+| `createCsvserverAppfwpolicyBinding` | Bind a WAF policy to a content-switching vserver | WAF |
+
+### Security & Access — Authentication
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listAuthenticationldappolicy` | List LDAP authentication policies | Authentication |
+| `createAuthenticationldappolicy` | Create a new LDAP authentication policy | Authentication |
+| `listAuthenticationradiuspolicy` | List RADIUS authentication policies | Authentication |
+| `createAuthenticationradiuspolicy` | Create a new RADIUS authentication policy | Authentication |
+| `listAuthenticationvserver` | List authentication virtual servers | Authentication |
+| `createAuthenticationvserver` | Create a new authentication vserver | Authentication |
+| `createAuthenticationvserverAuthenticationldappolicyBinding` | Bind an LDAP policy to an authentication vserver | Authentication |
+| `createAuthenticationvserverAuthenticationradiuspolicyBinding` | Bind a RADIUS policy to an authentication vserver | Authentication |
+
+### Security & Access — Rate Limiting
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listNslimitidentifier` | List rate-limit identifiers (the threshold/time-window definitions) | Rate Limiting |
+| `createNslimitidentifier` | Create a new rate-limit identifier | Rate Limiting |
+| `listNslimitselector` | List rate-limit selectors (what's being counted — e.g. per source IP) | Rate Limiting |
+| `createNslimitselector` | Create a new rate-limit selector | Rate Limiting |
+
+### Monitoring & Diagnostics (read-only)
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `getNsversionByName` | Get the NetScaler appliance's firmware version | Appliance Health |
+| `getHanodeByName` | Get a single HA node's status | HA Status |
+| `listHanode` | List all HA nodes and their sync/failover state | HA Status |
+| `listLbvserver` | List all LB virtual servers (used here for health visibility) | VServer Health |
+| `getLbvserverByName` | Get a single LB vserver's current state | VServer Health |
+| `listService` | List backend services (used here for health visibility) | Service Health |
+| `listServicegroup` | List service groups (used here for health visibility) | Service Health |
+| `listCsvserver` | List content-switching vservers (used here for config visibility) | Config Visibility |
+| `listResponderpolicy` | List responder policies (used here for config visibility) | Config Visibility |
+| `listRewritepolicy` | List rewrite policies (used here for config visibility) | Config Visibility |
+| `listGslbvserver` | List GSLB vservers (used here for config visibility) | Config Visibility |
+| `listSslcertkey` | List SSL certificates (used here for expiry visibility) | Certificate Health |
+| `getSslcertkeyByName` | Get a single certificate's expiry/status | Certificate Health |
+
+### Gateway & Remote Access — SSL VPN
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listVpnvserver` | List NetScaler Gateway (SSL VPN) virtual servers | Gateway |
+| `createVpnvserver` | Create a new Gateway vserver | Gateway |
+| `updateVpnvserver` | Change an existing Gateway vserver's configuration | Gateway |
+| `createVpnglobalAuthenticationldappolicyBinding` | Bind an LDAP auth policy globally to the Gateway | Gateway |
+| `createVpnglobalAuthenticationradiuspolicyBinding` | Bind a RADIUS auth policy globally to the Gateway | Gateway |
+| `createVpnglobalIntranetapplicationBinding` | Grant Gateway users access to an internal application/resource | Gateway |
+
+### Gateway & Remote Access — ICA Proxy
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listIcapolicy` | List ICA policies (govern access to Citrix Virtual Apps/Desktops via Gateway) | ICA Proxy |
+| `createIcapolicy` | Create a new ICA policy | ICA Proxy |
+| `updateIcapolicy` | Change an existing ICA policy | ICA Proxy |
+| `createIcaaction` | Create an ICA action (points at the StoreFront/broker address) | ICA Proxy |
+| `updateIcaaction` | Change an existing ICA action | ICA Proxy |
+| `createIcapolicyVpnvserverBinding` | Bind an ICA policy to a Gateway vserver | ICA Proxy |
+| `listIcapolicyVpnvserverBinding` | List ICA policies bound to a Gateway vserver | ICA Proxy |
+
+### System Administration — RBAC
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listSystemuser` | List NetScaler admin user accounts | RBAC |
+| `createSystemuser` | Create a new admin user account | RBAC |
+| `updateSystemuser` | Change an existing admin user's settings | RBAC |
+| `listSystemgroup` | List admin groups | RBAC |
+| `createSystemgroup` | Create a new admin group | RBAC |
+| `createSystemuserSystemgroupBinding` | Add a user to an admin group | RBAC |
+| `listSystemcmdpolicy` | List command policies (the actual permission boundary) | RBAC |
+| `createSystemcmdpolicy` | Create a new command policy | RBAC |
+| `createSystemuserSystemcmdpolicyBinding` | Attach a command policy directly to a user | RBAC |
+
+### System Administration — Feature & Licensing
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listNsfeature` | List which NetScaler features are enabled/disabled | Feature & Licensing |
+| `updateNsfeature` | Enable or disable a feature | Feature & Licensing |
+| `listNsmode` | List appliance operating modes | Feature & Licensing |
+| `updateNsmode` | Change an appliance operating mode | Feature & Licensing |
+| `listNslicense` | List installed licenses | Feature & Licensing |
+| `createNslicense` | Install a new license | Feature & Licensing |
+
+### System Administration — Config Backup
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listSystembackup` | List existing configuration backups | Config Backup |
+| `createSystembackup` | Trigger a new configuration backup | Config Backup |
+| `getSystembackupByName` | Get details of a specific backup | Config Backup |
+
+### Networking Fundamentals — IP & VLAN
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listNsip` | List IP addresses configured on the appliance | IP & VLAN |
+| `createNsip` | Add a new IP address | IP & VLAN |
+| `updateNsip` | Change an existing IP address's settings | IP & VLAN |
+| `listVlan` | List VLANs | IP & VLAN |
+| `createVlan` | Create a new VLAN | IP & VLAN |
+| `updateVlan` | Change an existing VLAN's settings | IP & VLAN |
+| `createVlanInterfaceBinding` | Bind a physical/logical interface to a VLAN | IP & VLAN |
+| `createVlanNsipBinding` | Bind an IP address to a VLAN | IP & VLAN |
+
+### Networking Fundamentals — Routing & Interfaces
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listRoute` | List static routes | Routing |
+| `createRoute` | Create a new static route | Routing |
+| `updateRoute` | Change an existing route | Routing |
+| `deleteRoute` | Remove a static route | Routing |
+| `listInterface` | List physical/logical network interfaces | Interfaces |
+| `updateInterface` | Change an interface's settings | Interfaces |
+| `createInterfacepair` | Create an interface pair (used for certain HA/forwarding configurations) | Interfaces |
+
+### Networking Fundamentals — LACP Channels
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `createChannel` | Create a new LACP link-aggregation channel | LACP Channel |
+| `updateChannel` | Change an existing channel's settings | LACP Channel |
+| `createChannelInterfaceBinding` | Add a physical interface into a channel | LACP Channel |
+
+### Networking Fundamentals — NAT
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listInat` | List inbound NAT (INAT) rules | NAT |
+| `createInat` | Create a new inbound NAT rule | NAT |
+| `updateInat` | Change an existing inbound NAT rule | NAT |
+| `listRnat` | List reverse NAT (RNAT) rules | NAT |
+| `createRnat` | Create a new reverse NAT rule | NAT |
+| `updateRnat` | Change an existing reverse NAT rule | NAT |
+
+### Clustering & High Availability
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listCluster` | List cluster configurations | Clustering |
+| `createCluster` | Create a new cluster instance | Clustering |
+| `listClusterinstance` | List cluster instances | Clustering |
+| `createClusterinstance` | Create a new cluster instance record | Clustering |
+| `listClusternode` | List nodes in a cluster | Clustering |
+| `createClusternode` | Add a new node to a cluster | Clustering |
+| `createClusterinstanceClusternodeBinding` | Attach a node to a specific cluster instance | Clustering |
+| `listHanode` | List HA (active/passive pair) nodes | HA Pairing |
+| `createHanode` | Configure a new HA node pairing | HA Pairing |
+| `updateHanode` | Change an existing HA node's configuration | HA Pairing |
+
+### DNS Services — Forward Records
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listDnsaddrec` | List DNS A (address) records | DNS Forward Records |
+| `createDnsaddrec` | Create a new A record | DNS Forward Records |
+| `updateDnsaddrec` | Change an existing A record | DNS Forward Records |
+| `listDnscnamerec` | List DNS CNAME (alias) records | DNS Forward Records |
+| `createDnscnamerec` | Create a new CNAME record | DNS Forward Records |
+| `updateDnscnamerec` | Change an existing CNAME record | DNS Forward Records |
+
+### DNS Services — Zone & Reverse Records
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listDnsnsrec` | List DNS NS (nameserver) records | DNS Zone Records |
+| `createDnsnsrec` | Create a new NS record | DNS Zone Records |
+| `listDnsptrrec` | List DNS PTR (reverse-lookup) records | DNS Reverse Records |
+| `createDnsptrrec` | Create a new PTR record | DNS Reverse Records |
+| `listDnssoarec` | List DNS SOA (zone authority) records | DNS Zone Records |
+| `createDnssoarec` | Create a new SOA record | DNS Zone Records |
+
+### Bot Management
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listBotpolicy` | List bot-management policies | Bot Management |
+| `createBotpolicy` | Create a new bot policy | Bot Management |
+| `updateBotpolicy` | Change an existing bot policy | Bot Management |
+| `listBotprofile` | List bot-detection profiles (signature/fingerprint/rate-based) | Bot Management |
+| `createBotprofile` | Create a new bot detection profile | Bot Management |
+| `updateBotprofile` | Change an existing bot profile | Bot Management |
+| `createBotpolicyCsvserverBinding` | Bind a bot policy to a content-switching vserver | Bot Management |
+| `createBotpolicyLbvserverBinding` | Bind a bot policy to an LB vserver | Bot Management |
+
+### Traffic Optimization & Analytics — Caching & Compression
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listCachepolicy` | List integrated-caching policies | Caching |
+| `createCachepolicy` | Create a new caching policy | Caching |
+| `updateCachepolicy` | Change an existing caching policy | Caching |
+| `createCachecontentgroup` | Create a cache content group (defines what's cacheable and for how long) | Caching |
+| `createCachepolicyLbvserverBinding` | Bind a caching policy to an LB vserver | Caching |
+| `listCmppolicy` | List compression policies | Compression |
+| `createCmppolicy` | Create a new compression policy | Compression |
+| `updateCmppolicy` | Change an existing compression policy | Compression |
+| `createCmppolicyLbvserverBinding` | Bind a compression policy to an LB vserver | Compression |
+
+### Traffic Optimization & Analytics — Performance Profiles & Spillover
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listNstcpprofile` | List TCP performance-tuning profiles | Performance Profiles |
+| `createNstcpprofile` | Create a new TCP profile | Performance Profiles |
+| `updateNstcpprofile` | Change an existing TCP profile | Performance Profiles |
+| `listNshttpprofile` | List HTTP performance-tuning profiles | Performance Profiles |
+| `createNshttpprofile` | Create a new HTTP profile | Performance Profiles |
+| `updateNshttpprofile` | Change an existing HTTP profile | Performance Profiles |
+| `listSpilloverpolicy` | List spillover (overflow) policies | Spillover |
+| `createSpilloverpolicy` | Create a new spillover policy | Spillover |
+| `createSpilloverpolicyLbvserverBinding` | Bind a spillover policy to an LB vserver | Spillover |
+
+### Traffic Optimization & Analytics — AppFlow
+
+| Operation | Plain-English description | Category |
+|---|---|---|
+| `listAppflowpolicy` | List AppFlow analytics-export policies | AppFlow |
+| `createAppflowpolicy` | Create a new AppFlow policy | AppFlow |
+| `updateAppflowpolicy` | Change an existing AppFlow policy | AppFlow |
+| `createAppflowaction` | Create an AppFlow action (what to export and where) | AppFlow |
+| `updateAppflowaction` | Change an existing AppFlow action | AppFlow |
+| `createAppflowcollector` | Create an AppFlow collector (the real network target analytics get sent to) | AppFlow |
+| `createAppflowpolicyCsvserverBinding` | Bind an AppFlow policy to a content-switching vserver | AppFlow |
 
 ## Verification checklist
 
